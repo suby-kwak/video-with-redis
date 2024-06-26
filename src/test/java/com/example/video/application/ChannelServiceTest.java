@@ -3,12 +3,10 @@ package com.example.video.application;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
-import com.example.video.api.adapter.out.ChannelPersistenceAdapter;
 import com.example.video.application.port.out.LoadChannelPort;
-import com.example.video.domain.channel.Channel;
 import com.example.video.domain.channel.ChannelFixtures;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +30,7 @@ class ChannelServiceTest {
     void testGetChannel() {
         var id = "channelId";
         given(loadChannelPort.loadChannel(any()))
-            .willReturn(ChannelFixtures.stub(id));
+            .willReturn(Optional.of(ChannelFixtures.stub(id)));
 
         var result = sut.getChannel(id);
 

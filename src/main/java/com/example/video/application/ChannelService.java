@@ -13,6 +13,6 @@ public class ChannelService implements GetChannelUserCase {
 
     @Override
     public Channel getChannel(String id) {
-        return loadChannelPort.loadChannel(id);
+        return loadChannelPort.loadChannel(id).get();
     }
 }

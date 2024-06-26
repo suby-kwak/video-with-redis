@@ -1,7 +1,8 @@
 package com.example.video.application.port.out;
 
 import com.example.video.domain.channel.Channel;
+import java.util.Optional;
 
 public interface LoadChannelPort {
-    Channel loadChannel(String id);
+    Optional<Channel> loadChannel(String id);
 }
