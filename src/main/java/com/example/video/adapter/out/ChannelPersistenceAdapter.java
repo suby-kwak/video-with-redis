@@ -1,6 +1,8 @@
 package com.example.video.adapter.out;
 
-import com.example.video.adapter.out.jpa.ChannelJpaRepository;
+import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
+import com.example.video.adapter.out.jpa.channel.ChannelJpaRepository;
+import com.example.video.adapter.out.redis.ChannelRedisHash;
 import com.example.video.adapter.out.redis.ChannelRedisRepository;
 import com.example.video.application.port.out.LoadChannelPort;
 import com.example.video.domain.channel.Channel;
@@ -18,7 +20,12 @@ public class ChannelPersistenceAdapter implements LoadChannelPort {
     public Optional<Channel> loadChannel(String id) {
         return channelRedisRepository.findById(id)
                 .map(Channel::from)
-                .or(() -> channelJpaRepository.findById(id)
-                    .map(Channel::from));
+                .or(() -> {
+                    var optionalEntity = channelJpaRepository.findById(id);
+                    optionalEntity.ifPresent(jpaEntity -> channelRedisRepository.save(ChannelRedisHash.fromEntity(jpaEntity)));
+
+                    System.out.println("test" + channelRedisRepository.findById(id));
+                    return optionalEntity.map(ChannelJpaEntity::toDomain);
+                });
     }
 }

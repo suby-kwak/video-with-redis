@@ -4,8 +4,9 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.example.video.adapter.out.jpa.ChannelJpaEntity;
-import com.example.video.adapter.out.jpa.ChannelJpaRepository;
+import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
+import com.example.video.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
+import com.example.video.adapter.out.jpa.channel.ChannelJpaRepository;
 import com.example.video.adapter.out.redis.ChannelRedisHash;
 import com.example.video.adapter.out.redis.ChannelRedisRepository;
 import java.util.Optional;
@@ -48,6 +49,7 @@ class ChannelPersistenceAdapterTest {
                     then(channel)
                         .hasFieldOrPropertyWithValue("id", id);
                 });
+
         }
 
         @Test
@@ -57,7 +59,7 @@ class ChannelPersistenceAdapterTest {
             given(channelRedisRepository.findById(any()))
                 .willReturn(Optional.empty());
             given(channelJpaRepository.findById(any()))
-                .willReturn(Optional.of(new ChannelJpaEntity(id)));
+                .willReturn(Optional.of(ChannelJpaEntityFixtures.stub(id)));
 
             var result = sut.loadChannel(id);
 

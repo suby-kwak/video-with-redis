@@ -1,6 +1,5 @@
 package com.example.video.domain.channel;
 
-import com.example.video.adapter.out.jpa.ChannelJpaEntity;
 import com.example.video.adapter.out.redis.ChannelRedisHash;
 import com.example.video.domain.User;
 import lombok.AllArgsConstructor;
@@ -17,12 +16,6 @@ public class Channel {
     private User contentOwner;
 
     public static Channel from(ChannelRedisHash channel) {
-        return Channel.builder()
-                .id(channel.getId())
-                .build();
-    }
-
-    public static Channel from(ChannelJpaEntity channel) {
         return Channel.builder()
                 .id(channel.getId())
                 .build();

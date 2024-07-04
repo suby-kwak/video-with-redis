@@ -1,4 +1,4 @@
-package com.example.video.adapter.out.jpa;
+package com.example.video.adapter.out.jpa.channel;
 
 import org.springframework.data.repository.CrudRepository;
 
