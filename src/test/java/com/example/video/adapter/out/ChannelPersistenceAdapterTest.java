@@ -4,11 +4,10 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.video.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
 import com.example.video.adapter.out.jpa.channel.ChannelJpaRepository;
-import com.example.video.adapter.out.redis.ChannelRedisHash;
-import com.example.video.adapter.out.redis.ChannelRedisRepository;
+import com.example.video.adapter.out.redis.channel.ChannelRedisHash;
+import com.example.video.adapter.out.redis.channel.ChannelRedisRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

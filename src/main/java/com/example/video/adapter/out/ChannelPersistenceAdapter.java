@@ -2,15 +2,15 @@ package com.example.video.adapter.out;
 
 import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.video.adapter.out.jpa.channel.ChannelJpaRepository;
-import com.example.video.adapter.out.redis.ChannelRedisHash;
-import com.example.video.adapter.out.redis.ChannelRedisRepository;
+import com.example.video.adapter.out.redis.channel.ChannelRedisHash;
+import com.example.video.adapter.out.redis.channel.ChannelRedisRepository;
 import com.example.video.application.port.out.LoadChannelPort;
 import com.example.video.domain.channel.Channel;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class ChannelPersistenceAdapter implements LoadChannelPort {
     private final ChannelJpaRepository channelJpaRepository;

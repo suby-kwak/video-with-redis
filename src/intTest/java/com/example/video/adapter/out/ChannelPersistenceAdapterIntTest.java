@@ -4,11 +4,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.video.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
 import com.example.video.adapter.out.jpa.channel.ChannelJpaRepository;
-import com.example.video.adapter.out.redis.ChannelRedisHash;
-import com.example.video.adapter.out.redis.ChannelRedisRepository;
+import com.example.video.adapter.out.redis.channel.ChannelRedisHash;
+import com.example.video.adapter.out.redis.channel.ChannelRedisRepository;
 import com.example.video.config.TestRedisConfig;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

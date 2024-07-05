@@ -1,7 +1,8 @@
 package com.example.video.domain.channel;
 
-import com.example.video.adapter.out.redis.ChannelRedisHash;
+import com.example.video.adapter.out.redis.channel.ChannelRedisHash;
 import com.example.video.domain.User;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class Channel {
+public class Channel implements Serializable {
     private String id;
     private ChannelSnippet snippet;
     private ChannelStatistics statistics;
