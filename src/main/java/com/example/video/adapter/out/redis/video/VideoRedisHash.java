@@ -4,6 +4,7 @@ import com.example.video.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.video.adapter.out.redis.channel.ChannelRedisHash;
 import com.example.video.domain.Video;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class VideoRedisHash implements Serializable {
     private String description;
     private String thumbnail;
     private ChannelRedisHash channel;
-    private ZonedDateTime publishedAt;
+    private LocalDateTime publishedAt;
 
     public static VideoRedisHash fromJpaEntity(VideoJpaEntity videoJpaEntity) {
         return new VideoRedisHash(

@@ -2,6 +2,7 @@ package com.example.video.adapter.out.jpa.video;
 
 import com.example.video.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.video.domain.Video;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,7 +25,7 @@ public class VideoJpaEntity {
     @ManyToOne
     @JoinColumn(name = "channel_id")
     private ChannelJpaEntity channel;
-    private ZonedDateTime publishedAt;
+    private LocalDateTime publishedAt;
 
     public Video toDomain() {
         return Video.builder()

@@ -1,7 +1,7 @@
 package com.example.video.adapter.out.jpa.video;
 
 import com.example.video.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public class VideoJpaEntityFixtures {
     public static VideoJpaEntity stub(String id) {
@@ -11,7 +11,7 @@ public class VideoJpaEntityFixtures {
             "description",
             "https://example.com/thumbnail",
             ChannelJpaEntityFixtures.stub("channelId"),
-            ZonedDateTime.now()
+            LocalDateTime.now()
         );
     }
 }

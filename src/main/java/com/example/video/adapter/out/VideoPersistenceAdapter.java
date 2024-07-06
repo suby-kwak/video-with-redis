@@ -26,7 +26,7 @@ public class VideoPersistenceAdapter implements LoadVideoPort {
     }
 
     @Override
-    @Cacheable(cacheNames = VIDEO_LIST, key = "#channelId")
+    @Cacheable(cacheManager = "redisListCacheManager", cacheNames = VIDEO_LIST, key = "#channelId")
     public List<Video> loadVideoByChannel(String channelId) {
         return videoJpaRepository.findByChannelId(channelId).stream()
             .map(VideoJpaEntity::toDomain)
