@@ -1,5 +1,6 @@
 package com.example.mytv.domain.channel;
 
+import com.example.mytv.adapter.in.api.ChannelSnippetRequest;
 import com.example.mytv.adapter.out.redis.channel.ChannelRedisHash;
 import com.example.mytv.domain.User;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,14 @@ public class Channel {
     public static Channel from(ChannelRedisHash channel) {
         return Channel.builder()
                 .id(channel.getId())
+                .build();
+    }
+
+    public void updateSnippet(ChannelSnippetRequest snippetRequest) {
+        this.snippet = ChannelSnippet.builder()
+                .title(snippetRequest.getTitle())
+                .description(snippetRequest.getDescription())
+                .thumbnailUrl(snippetRequest.getThumbnailUrl())
                 .build();
     }
 }

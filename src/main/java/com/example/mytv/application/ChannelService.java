@@ -20,7 +20,6 @@ public class ChannelService implements ChannelUseCase {
     private final LoadUserPort loadUserPort;
     private final SaveChannelPort saveChannelPort;
 
-
     @Override
     public Channel createChannel(ChannelRequest request) {
         var contentOwner = loadUserPort.loadUser(request.getContentOwnerId()).get();
@@ -44,6 +43,15 @@ public class ChannelService implements ChannelUseCase {
             )
             .contentOwner(contentOwner)
             .build();
+
+        saveChannelPort.saveChannel(channel);
+        return channel;
+    }
+
+    @Override
+    public Channel updateChannel(String channelId, ChannelRequest channelRequest) {
+        var channel = loadChannelPort.loadChannel(channelId).get();
+        channel.updateSnippet(channelRequest.getSnippet());
 
         saveChannelPort.saveChannel(channel);
         return channel;

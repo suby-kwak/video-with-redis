@@ -39,7 +39,7 @@ class ChannelServiceTest {
     @DisplayName("createChannel")
     void testCreateChannel() {
         // Given
-        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title", "description", "https://example.com/thumbnail"), "userId");
+        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title", "description", "https://example.com/thumbnail.jpg"), "userId");
         willDoNothing().given(saveChannelPort).saveChannel(any());
         given(loadUserPort.loadUser(any())).willReturn(Optional.of(UserFixtures.stub()));
         // When
@@ -50,10 +50,31 @@ class ChannelServiceTest {
             .hasFieldOrProperty("id")
             .hasFieldOrPropertyWithValue("snippet.title", "title")
             .hasFieldOrPropertyWithValue("snippet.description", "description")
+            .hasFieldOrPropertyWithValue("snippet.thumbnailUrl", "https://example.com/thumbnail.jpg")
             .hasFieldOrPropertyWithValue("statistics.viewCount", 0)
             .hasFieldOrPropertyWithValue("statistics.videoCount", 0)
             .hasFieldOrPropertyWithValue("statistics.commentCount", 0)
             .hasFieldOrPropertyWithValue("statistics.subscriberCount", 0)
+            .hasFieldOrPropertyWithValue("contentOwner.id", "userId");
+    }
+
+    @Test
+    @DisplayName("updateChannel")
+    void testUpdateChannel() {
+        // Given
+        var channelId = "channelId";
+        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title2", "description2", "https://example.com/thumbnail2.jpg"), "userId");
+        given(loadChannelPort.loadChannel(any())).willReturn(Optional.of(ChannelFixtures.stub(channelId)));
+        willDoNothing().given(saveChannelPort).saveChannel(any());
+        // When
+        var result = sut.updateChannel(channelId, channelRequest);
+        // Then
+        then(result)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", channelId)
+            .hasFieldOrPropertyWithValue("snippet.title", "title2")
+            .hasFieldOrPropertyWithValue("snippet.description", "description2")
+            .hasFieldOrPropertyWithValue("snippet.thumbnailUrl", "https://example.com/thumbnail2.jpg")
             .hasFieldOrPropertyWithValue("contentOwner.id", "userId");
     }
 

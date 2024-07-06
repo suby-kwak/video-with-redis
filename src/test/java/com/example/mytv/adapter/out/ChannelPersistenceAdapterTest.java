@@ -3,7 +3,9 @@ package com.example.mytv.adapter.out;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
+import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaRepository;
 import com.example.mytv.adapter.out.redis.channel.ChannelRedisHash;
@@ -29,6 +31,26 @@ class ChannelPersistenceAdapterTest {
     @BeforeEach
     void setUp() {
         sut = new ChannelPersistenceAdapter(channelJpaRepository, channelRedisRepository);
+    }
+
+    @Nested
+    @DisplayName("saveChannel")
+    class SaveChannelTest {
+        @Test
+        @DisplayName("Channel 을 Jpa, Redis 에 저장")
+        void saveChannel() {
+            // Given
+            var channel = ChannelFixtures.stub("channelId");
+            given(channelJpaRepository.save(any())).willReturn(ChannelJpaEntity.from(channel));
+            given(channelRedisRepository.save(any())).willReturn(ChannelRedisHash.from(channel));
+
+            // When
+            sut.saveChannel(channel);
+
+            // Then
+            verify(channelJpaRepository).save(any());
+            verify(channelRedisRepository).save(any());
+        }
     }
 
     @Nested

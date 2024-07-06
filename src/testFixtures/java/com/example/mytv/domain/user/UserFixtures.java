@@ -11,7 +11,7 @@ public class UserFixtures {
 
     public static User channelOwner() {
         return User.builder()
-            .id("uerId")
+            .id("userId")
             .build();
     }
 }
