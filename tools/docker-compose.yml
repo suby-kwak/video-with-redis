@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mytv-mysql
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/mytv.cnf
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mytv
+      - MYSQL_USER=local
+      - MYSQL_PASSWORD=local
+    restart: always
+  redis:
+    image: redis:7.2.5
+    container_name: mytv-redis
+    ports:
+      - '6379:6379'
+    restart: always
+  mongodb:
+    image: mongo
+    container_name: mytv-mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb/data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=local
+      - MONGO_INITDB_ROOT_PASSWORD=local
+      - MONGO_INITDB_DATABASE=mytv

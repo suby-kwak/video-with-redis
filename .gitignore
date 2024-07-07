@@ -25,3 +25,5 @@ replay_pid*
 
 build/
 .gradle/
+tools/mysql/
+tools/mongodb/
