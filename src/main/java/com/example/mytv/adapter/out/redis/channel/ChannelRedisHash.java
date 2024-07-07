@@ -5,12 +5,14 @@ import com.example.mytv.domain.channel.Channel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash("channel")
 @AllArgsConstructor
 @Getter
 public class ChannelRedisHash implements Serializable {
+    @Id
     private String id;
     private ChannelSnippetRedisHash snippet;
     private ChannelStatisticsRedisHash statistics;

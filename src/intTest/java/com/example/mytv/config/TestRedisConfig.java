@@ -11,7 +11,7 @@ public class TestRedisConfig {
     private RedisServer redisServer;
 
     public TestRedisConfig(
-        @Value("${spring.redis.port:6379}")
+        @Value("${spring.data.redis.port:6379}")
         Integer redisPort
     ) {
         this.redisServer = new RedisServer(redisPort);
