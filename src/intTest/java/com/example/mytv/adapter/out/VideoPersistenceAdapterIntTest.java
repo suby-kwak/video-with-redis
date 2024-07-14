@@ -1,63 +1,58 @@
 package com.example.mytv.adapter.out;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.mytv.adapter.out.jpa.video.VideoJpaEntityFixtures;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.config.TestRedisConfig;
-import java.util.List;
-import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = TestRedisConfig.class)
 @Transactional
-@ExtendWith(MockitoExtension.class)
+@Sql("/com/example/mytv/adapter/out/VideoPersistenceAdapterIntTest.sql")
 public class VideoPersistenceAdapterIntTest {
     @Autowired
     private VideoPersistenceAdapter sut;
 
     @SpyBean
     private VideoJpaRepository videoJpaRepository;
+    @Autowired
+    private RedisTemplate<String, Long> redisTemplate;
 
     @Test
     void loadVideo() {
-        // Given
         var videoId = "video1";
-        given(videoJpaRepository.findById(videoId))
-            .willReturn(Optional.of(VideoJpaEntityFixtures.stub(videoId)));
-
-        // When
         for (int i = 0; i < 3; i++) {
             sut.loadVideo(videoId);
         }
 
-        // Then
         verify(videoJpaRepository, times(1)).findById(videoId);
     }
 
     @Test
     void loadVideoByChannel() {
-        // Given
-        var videoJpaEntity1 = VideoJpaEntityFixtures.stub("video1");
-        var videoJpaEntity2 = VideoJpaEntityFixtures.stub("video2");
-        given(videoJpaRepository.findByChannelId(any()))
-            .willReturn(List.of(videoJpaEntity1, videoJpaEntity2));
-
-        // When
         for (int i = 0; i < 3; i++) {
             sut.loadVideoByChannel("channelId");
         }
 
-        // Then
         verify(videoJpaRepository, times(1)).findByChannelId("channelId");
+    }
+
+    @Test
+    void incrVideoViewCount() {
+        for (int i = 0; i < 3; i++) {
+            sut.incrementViewCount("video1");
+        }
+
+        var result = redisTemplate.opsForValue().get("video1:viewCount");
+        then(result).isEqualTo(3L);
     }
 }

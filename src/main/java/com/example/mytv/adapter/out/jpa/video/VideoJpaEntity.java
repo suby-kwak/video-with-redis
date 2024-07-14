@@ -20,7 +20,7 @@ public class VideoJpaEntity {
     private String id;
     private String title;
     private String description;
-    private String thumbnail;
+    private String thumbnailUrl;
     @ManyToOne
     @JoinColumn(name = "channel_id")
     private ChannelJpaEntity channel;
@@ -31,7 +31,7 @@ public class VideoJpaEntity {
                 .id(this.getId())
                 .title(this.getTitle())
                 .description(this.getDescription())
-                .thumbnail(this.getThumbnail())
+                .thumbnailUrl(this.getThumbnailUrl())
                 .channel(this.getChannel().toDomain())
                 .publishedAt(this.getPublishedAt())
                 .build();

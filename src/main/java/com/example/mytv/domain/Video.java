@@ -15,7 +15,12 @@ public class Video {
     private String id;
     private String title;
     private String description;
-    private String thumbnail;
+    private String thumbnailUrl;
     private Channel channel;
+    private Long viewCount;
     private LocalDateTime publishedAt;
+
+    public void bindViewCount(long viewCount) {
+        this.viewCount = viewCount;
+    }
 }

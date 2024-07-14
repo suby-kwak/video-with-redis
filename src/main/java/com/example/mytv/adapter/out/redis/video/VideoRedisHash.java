@@ -16,7 +16,7 @@ public class VideoRedisHash implements Serializable {
     private String id;
     private String title;
     private String description;
-    private String thumbnail;
+    private String thumbnailUrl;
     private ChannelRedisHash channel;
     private LocalDateTime publishedAt;
 
@@ -25,7 +25,7 @@ public class VideoRedisHash implements Serializable {
                 videoJpaEntity.getId(),
                 videoJpaEntity.getTitle(),
                 videoJpaEntity.getDescription(),
-                videoJpaEntity.getThumbnail(),
+                videoJpaEntity.getThumbnailUrl(),
                 ChannelRedisHash.from(videoJpaEntity.getChannel().toDomain()),
                 videoJpaEntity.getPublishedAt()
         );
@@ -36,7 +36,7 @@ public class VideoRedisHash implements Serializable {
                 .id(this.getId())
                 .title(this.getTitle())
                 .description(this.getDescription())
-                .thumbnail(this.getThumbnail())
+                .thumbnailUrl(this.getThumbnailUrl())
                 .channel(this.getChannel().toDomain())
                 .publishedAt(this.getPublishedAt())
                 .build();

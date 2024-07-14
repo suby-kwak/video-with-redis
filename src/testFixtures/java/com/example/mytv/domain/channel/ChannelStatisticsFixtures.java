@@ -7,7 +7,6 @@ public class ChannelStatisticsFixtures {
 
     public static ChannelStatistics stub(int viewCount, int videoCount, int subscriberCount, int commentCount) {
         return ChannelStatistics.builder()
-            .viewCount(viewCount)
             .subscriberCount(subscriberCount)
             .videoCount(videoCount)
             .commentCount(commentCount)

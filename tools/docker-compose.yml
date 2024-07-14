@@ -26,5 +26,7 @@ services:
     volumes:
       - ./mongodb/data:/data
     environment:
+      - MONGO_INITDB_ROOT_USERNAME=local
+      - MONGO_INITDB_ROOT_PASSWORD=local
       - MONGO_INITDB_DATABASE=mytv
     restart: always
