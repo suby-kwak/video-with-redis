@@ -1,6 +1,6 @@
 package com.example.mytv.application;
 
-import com.example.mytv.adapter.in.api.ChannelRequest;
+import com.example.mytv.adapter.in.api.dto.ChannelRequest;
 import com.example.mytv.application.port.in.ChannelUseCase;
 import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.LoadUserPort;
@@ -35,7 +35,6 @@ public class ChannelService implements ChannelUseCase {
             )
             .statistics(
                 ChannelStatistics.builder()
-                    .viewCount(0)
                     .subscriberCount(0)
                     .videoCount(0)
                     .commentCount(0)

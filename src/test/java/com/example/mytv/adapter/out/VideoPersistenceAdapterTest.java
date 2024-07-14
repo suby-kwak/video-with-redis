@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class VideoPersistenceAdapterTest {
@@ -24,9 +25,12 @@ class VideoPersistenceAdapterTest {
     @Mock
     private VideoJpaRepository videoJpaRepository;
 
+    @Mock
+    private RedisTemplate<String, Long> redisTemplate;
+
     @BeforeEach
     void setUp() {
-        sut = new VideoPersistenceAdapter(videoJpaRepository);
+        sut = new VideoPersistenceAdapter(videoJpaRepository, redisTemplate);
     }
 
     @Nested

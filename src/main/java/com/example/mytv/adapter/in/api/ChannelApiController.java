@@ -1,5 +1,6 @@
 package com.example.mytv.adapter.in.api;
 
+import com.example.mytv.adapter.in.api.dto.ChannelRequest;
 import com.example.mytv.application.port.in.ChannelUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
