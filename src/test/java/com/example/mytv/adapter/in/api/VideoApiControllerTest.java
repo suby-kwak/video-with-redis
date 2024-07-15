@@ -2,7 +2,10 @@ package com.example.mytv.adapter.in.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +15,7 @@ import java.util.stream.LongStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +32,7 @@ class VideoApiControllerTest {
 
     @Nested
     @DisplayName("GET /api/v1/videos/{videoId}")
-    class GetVideo {
+    class GetVideoTest {
         @Test
         @DisplayName("vidoe 가 있으면 200 OK")
         void testGetVideo() throws Exception {
@@ -50,7 +54,7 @@ class VideoApiControllerTest {
 
     @Nested
     @DisplayName("GET /api/v1/videos?channelId={channelId}")
-    class ListVideo {
+    class ListVideoTest {
         @Test
         @DisplayName("200 OK, 목록 반환")
         void testListVideo() throws Exception {
@@ -71,6 +75,30 @@ class VideoApiControllerTest {
                     jsonPath("$.size()").value(3),
                     jsonPath("$[0].channel.id").value(channelId)
                 );
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/v1/videos/view")
+    class VideoViewCountTest {
+        @Test
+        @DisplayName("200 OK, 조회수 증가")
+        void testViewCount() throws Exception {
+            // Given
+            var videoId = "videoId";
+            willDoNothing().given(videoUseCase).increaseViewCount(any());
+
+            // When
+            mockMvc
+                .perform(
+                    post("/api/v1/videos/{videoId}/view", videoId)
+                )
+                .andExpectAll(
+                    status().isOk()
+                );
+
+            // Then
+            verify(videoUseCase).increaseViewCount(videoId);
         }
     }
 }

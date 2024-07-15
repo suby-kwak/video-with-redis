@@ -3,6 +3,7 @@ package com.example.mytv.adapter.out;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
@@ -16,17 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class ChannelPersistenceAdapterTest {
     private ChannelPersistenceAdapter sut;
-    @Mock
-    private ChannelJpaRepository channelJpaRepository;
-    @Mock
-    private ChannelRedisRepository channelRedisRepository;
+
+    private final ChannelJpaRepository channelJpaRepository = mock(ChannelJpaRepository.class);
+    private final ChannelRedisRepository channelRedisRepository = mock(ChannelRedisRepository.class);
 
     @BeforeEach
     void setUp() {

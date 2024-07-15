@@ -32,4 +32,9 @@ public class VideoService implements VideoUseCase {
             })
             .toList();
     }
+
+    @Override
+    public void increaseViewCount(String videoId) {
+        videoPersistenceAdapter.incrementViewCount(videoId);
+    }
 }

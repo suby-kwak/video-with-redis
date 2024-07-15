@@ -1,7 +1,8 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.config.RedisCacheNames.VIDEO;
-import static com.example.mytv.config.RedisCacheNames.VIDEO_LIST;
+import static com.example.mytv.util.CacheKeyNames.VIDEO;
+import static com.example.mytv.util.CacheKeyNames.VIDEO_LIST;
+import static com.example.mytv.util.RedisKeyGenerator.getVideoViewCountKey;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
@@ -12,7 +13,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,9 +51,5 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     public Long getViewCount(String videoId) {
         var videoViewCountKey = getVideoViewCountKey(videoId);
         return redisTemplate.opsForValue().get(videoViewCountKey);
-    }
-
-    private String getVideoViewCountKey(String videoId) {
-        return videoId + ":viewCount";
     }
 }

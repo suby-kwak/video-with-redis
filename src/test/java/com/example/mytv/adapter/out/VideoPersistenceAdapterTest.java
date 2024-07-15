@@ -4,6 +4,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntityFixtures;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
@@ -13,20 +14,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
 
-@ExtendWith(MockitoExtension.class)
 class VideoPersistenceAdapterTest {
     private VideoPersistenceAdapter sut;
 
-    @Mock
-    private VideoJpaRepository videoJpaRepository;
+    private final VideoJpaRepository videoJpaRepository = mock(VideoJpaRepository.class);
 
-    @Mock
-    private RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class);
 
     @BeforeEach
     void setUp() {

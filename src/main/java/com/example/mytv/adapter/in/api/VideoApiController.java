@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +25,10 @@ public class VideoApiController {
     @GetMapping(params = "channelId")
     public List<Video> listVideo(@RequestParam String channelId) {
         return videoUseCase.listVideos(channelId);
+    }
+
+    @PostMapping("{videoId}/view")
+    public void increaseVideoViewCount(@PathVariable String videoId) {
+        videoUseCase.increaseViewCount(videoId);
     }
 }
