@@ -1,5 +1,6 @@
 package com.example.mytv.adapter.in;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,15 +31,30 @@ public class UserApiControllerIntTest {
     }
 
     @Test
-    void testGetUser() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
-            .header(HeaderAttribute.X_AUTH_KEY, "user1")
-        )
-        .andDo(print())
-        .andExpectAll(
-            status().isOk(),
-            jsonPath("$.id").value("user1"),
-            jsonPath("$.name").value("user name1")
-        );
+    void testGetUserWithHeader() throws Exception{
+        mockMvc
+            .perform(
+                get("/api/v1/users")
+                    .header(HeaderAttribute.X_AUTH_KEY, "user1")
+            )
+            .andDo(print())
+            .andExpectAll(
+                status().isOk(),
+                jsonPath("$.id").value("user1"),
+                jsonPath("$.name").value("user name1")
+            );
+    }
+
+    @Test
+    void testGetUserWithoutHeader() throws Exception{
+        mockMvc
+            .perform(
+                get("/api/v1/users")
+            )
+            .andDo(print())
+            .andExpectAll(
+                status().isOk(),
+                jsonPath("$.id").doesNotExist()
+            );
     }
 }
