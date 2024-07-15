@@ -7,4 +7,6 @@ public interface VideoUseCase {
     Video getVideo(String videoId);
 
     List<Video> listVideos(String channelId);
+
+    void increaseViewCount(String videoId);
 }

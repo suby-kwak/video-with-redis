@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.config.TestRedisConfig;
-import org.junit.jupiter.api.DisplayName;
+import com.example.mytv.util.RedisKeyGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +52,7 @@ public class VideoPersistenceAdapterIntTest {
             sut.incrementViewCount("video1");
         }
 
-        var result = redisTemplate.opsForValue().get("video1:viewCount");
+        var result = redisTemplate.opsForValue().get(RedisKeyGenerator.getVideoViewCountKey("video1"));
         then(result).isEqualTo(3L);
     }
 }
