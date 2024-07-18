@@ -22,8 +22,11 @@ repositories {
 
 sourceSets {
     intTest {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
+        java {
+            srcDirs("src/intTest/java")
+            compileClasspath += sourceSets.main.output + test.output
+            runtimeClasspath += sourceSets.main.output + test.output
+        }
     }
 }
 
@@ -42,7 +45,6 @@ dependencies {
     testImplementation 'it.ozimov:embedded-redis:0.7.2'
     testRuntimeOnly 'com.h2database:h2'
     testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.15.0'
-
 }
 
 test {
