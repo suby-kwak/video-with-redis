@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.mytv.adapter.in.api.dto.ChannelRequest;
 import com.example.mytv.adapter.in.api.dto.ChannelSnippetRequest;
 import com.example.mytv.application.port.in.ChannelUseCase;
-import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.domain.channel.ChannelFixtures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

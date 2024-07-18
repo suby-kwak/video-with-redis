@@ -6,10 +6,8 @@ import com.example.mytv.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Builder
 public class Channel {
@@ -18,17 +16,20 @@ public class Channel {
     private ChannelStatistics statistics;
     private User contentOwner;
 
-    public static Channel from(ChannelRedisHash channel) {
+    public static Channel from(ChannelRedisHash channelRedisHash) {
         return Channel.builder()
-                .id(channel.getId())
-                .build();
+            .id(channelRedisHash.getId())
+            .snippet(channelRedisHash.getSnippet().toDomain())
+            .statistics(channelRedisHash.getStatistics().toDomain())
+            .contentOwner(channelRedisHash.getContentOwner().toDomain())
+            .build();
     }
 
     public void updateSnippet(ChannelSnippetRequest snippetRequest) {
         this.snippet = ChannelSnippet.builder()
-                .title(snippetRequest.getTitle())
-                .description(snippetRequest.getDescription())
-                .thumbnailUrl(snippetRequest.getThumbnailUrl())
-                .build();
+            .title(snippetRequest.getTitle())
+            .description(snippetRequest.getDescription())
+            .thumbnailUrl(snippetRequest.getThumbnailUrl())
+            .build();
     }
 }
