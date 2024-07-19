@@ -8,14 +8,17 @@ import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.SaveChannelPort;
 import com.example.mytv.domain.channel.Channel;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ChannelPersistenceAdapter implements LoadChannelPort, SaveChannelPort {
     private final ChannelJpaRepository channelJpaRepository;
     private final ChannelRedisRepository channelRedisRepository;
+
+    public ChannelPersistenceAdapter(ChannelJpaRepository channelJpaRepository, ChannelRedisRepository channelRedisRepository) {
+        this.channelJpaRepository = channelJpaRepository;
+        this.channelRedisRepository = channelRedisRepository;
+    }
 
     @Override
     public void saveChannel(Channel channel) {

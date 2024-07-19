@@ -8,8 +8,8 @@ public class ChannelJpaEntityFixtures {
         return new ChannelJpaEntity(
             id,
             new ChannelSnippetJpaEntity("title", "description", "https://example.com/thumbnail", LocalDateTime.now()),
-            new ChannelStatisticsJpaEntity(10, 10, 10),
-            new UserJpaEntity("userId", "userName")
+            new ChannelStatisticsJpaEntity(10L, 10L, 10L),
+            new UserJpaEntity("userId", "user")
         );
     }
 }
