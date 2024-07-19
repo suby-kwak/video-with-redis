@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ChannelStatistics {
-    private int videoCount;
-    private int subscriberCount;
-    private int commentCount;
+    private long videoCount;
+    private long subscriberCount;
+    private long commentCount;
 }

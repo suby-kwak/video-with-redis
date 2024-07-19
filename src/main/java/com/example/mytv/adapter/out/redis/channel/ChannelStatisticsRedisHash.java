@@ -9,9 +9,9 @@ import org.springframework.data.redis.core.RedisHash;
 @AllArgsConstructor
 @Getter
 public class ChannelStatisticsRedisHash {
-    private int videoCount;
-    private int subscriberCount;
-    private int commentCount;
+    private long videoCount;
+    private long subscriberCount;
+    private long commentCount;
 
     public static ChannelStatisticsRedisHash from(ChannelStatistics statistics) {
         return new ChannelStatisticsRedisHash(statistics.getVideoCount(), statistics.getSubscriberCount(), statistics.getCommentCount());

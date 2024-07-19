@@ -51,9 +51,9 @@ class ChannelServiceTest {
             .hasFieldOrPropertyWithValue("snippet.title", "title")
             .hasFieldOrPropertyWithValue("snippet.description", "description")
             .hasFieldOrPropertyWithValue("snippet.thumbnailUrl", "https://example.com/thumbnail.jpg")
-            .hasFieldOrPropertyWithValue("statistics.videoCount", 0)
-            .hasFieldOrPropertyWithValue("statistics.commentCount", 0)
-            .hasFieldOrPropertyWithValue("statistics.subscriberCount", 0)
+            .hasFieldOrPropertyWithValue("statistics.videoCount", 0L)
+            .hasFieldOrPropertyWithValue("statistics.commentCount", 0L)
+            .hasFieldOrPropertyWithValue("statistics.subscriberCount", 0L)
             .hasFieldOrPropertyWithValue("contentOwner.id", "userId");
     }
 

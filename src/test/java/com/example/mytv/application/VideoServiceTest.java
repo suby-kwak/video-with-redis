@@ -3,6 +3,8 @@ package com.example.mytv.application;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.VideoPersistenceAdapter;
 import com.example.mytv.domain.video.VideoFixtures;
@@ -10,16 +12,11 @@ import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class VideoServiceTest {
     private VideoService sut;
 
-    @Mock
-    private VideoPersistenceAdapter videoPersistenceAdapter;
+    private final VideoPersistenceAdapter videoPersistenceAdapter = mock(VideoPersistenceAdapter.class);
 
     @BeforeEach
     void setUp() {
@@ -60,5 +57,14 @@ class VideoServiceTest {
             .extracting("channel.id").containsOnly(channelId);
         then(result)
             .extracting("viewCount").contains(100L, 150L, 200L);
+    }
+
+    @Test
+    void testIncrementViewCount() {
+        given(videoPersistenceAdapter.loadVideo(any())).willReturn(VideoFixtures.stub("videoId"));
+
+        sut.increaseViewCount("videoId");
+
+        verify(videoPersistenceAdapter).incrementViewCount("videoId");
     }
 }
