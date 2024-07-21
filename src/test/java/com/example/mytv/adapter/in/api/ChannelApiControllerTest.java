@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.mytv.adapter.in.api.dto.ChannelRequest;
@@ -49,7 +50,8 @@ class ChannelApiControllerTest {
                     .content(objectMapper.writeValueAsString(channelRequest))
             )
             .andExpectAll(
-                status().isOk()
+                status().isOk(),
+                jsonPath("$.id").value("channelId")
             );
 
         verify(channelUseCase).createChannel(
