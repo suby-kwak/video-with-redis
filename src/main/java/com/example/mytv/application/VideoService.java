@@ -1,9 +1,12 @@
 package com.example.mytv.application;
 
+import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.adapter.out.VideoPersistenceAdapter;
 import com.example.mytv.application.port.in.VideoUseCase;
 import com.example.mytv.domain.Video;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +35,20 @@ public class VideoService implements VideoUseCase {
                 return video;
             })
             .toList();
+    }
+
+    @Override
+    public Video createVideo(VideoRequest videoRequest) {
+        var video = Video.builder()
+                .id(UUID.randomUUID().toString())
+                .title(videoRequest.getTitle())
+                .description(videoRequest.getDescription())
+                .thumbnailUrl(videoRequest.getThumbnailUrl())
+                .channelId(videoRequest.getChannelId())
+                .publishedAt(LocalDateTime.now())
+                .build();
+        videoPersistenceAdapter.createVideo(video);
+        return video;
     }
 
     @Override

@@ -9,23 +9,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.application.port.in.VideoUseCase;
 import com.example.mytv.domain.video.VideoFixtures;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(VideoApiController.class)
 class VideoApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private VideoUseCase videoUseCase;
@@ -73,8 +77,34 @@ class VideoApiControllerTest {
                 .andExpectAll(
                     status().isOk(),
                     jsonPath("$.size()").value(3),
-                    jsonPath("$[0].channel.id").value(channelId)
+                    jsonPath("$[0].channelId").value(channelId)
                 );
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /api/v1/videos")
+    class CreateVideo {
+        @Test
+        @DisplayName("200 OK, 생성된 Video id 를 반환")
+        void testCreateVideo() throws Exception {
+            // given
+            var videoRequest = new VideoRequest("title", "desc", "https://example.com/image.jpg", "channelId");
+            given(videoUseCase.createVideo(any())).willReturn(VideoFixtures.stub("videoId"));
+
+            // when
+            mockMvc
+                .perform(
+                    post("/api/v1/videos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(videoRequest))
+                )
+                .andExpectAll(
+                    status().isOk()
+                );
+
+            // then
+            verify(videoUseCase).createVideo(any());
         }
     }
 

@@ -10,7 +10,7 @@ public class VideoFixtures {
             .title("video title")
             .description("video description")
             .thumbnailUrl("https://example.com/thumbnail.jpg")
-            .channel(ChannelFixtures.stub("channelId"))
+            .channelId("channelId")
             .viewCount(0L)
             .build();
     }

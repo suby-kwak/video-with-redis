@@ -10,7 +10,7 @@ public class VideoJpaEntityFixtures {
             "title",
             "description",
             "https://example.com/thumbnail",
-            ChannelJpaEntityFixtures.stub("channelId"),
+            "channelId",
             LocalDateTime.now()
         );
     }

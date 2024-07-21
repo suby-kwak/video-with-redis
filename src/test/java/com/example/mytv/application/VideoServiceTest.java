@@ -3,9 +3,11 @@ package com.example.mytv.application;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.example.mytv.adapter.in.dto.VideoRequestFixtures;
 import com.example.mytv.adapter.out.VideoPersistenceAdapter;
 import com.example.mytv.domain.video.VideoFixtures;
 import java.util.stream.LongStream;
@@ -54,9 +56,23 @@ class VideoServiceTest {
         // Then
         then(result)
             .hasSize(3)
-            .extracting("channel.id").containsOnly(channelId);
+            .extracting("channelId").containsOnly(channelId);
         then(result)
             .extracting("viewCount").contains(100L, 150L, 200L);
+    }
+
+    @Test
+    void testCreateVideo() {
+        var videoRequest = VideoRequestFixtures.stub();
+        willDoNothing().given(videoPersistenceAdapter).createVideo(any());
+
+        var result = sut.createVideo(videoRequest);
+
+        // Then
+        then(result)
+            .isNotNull()
+            .hasFieldOrProperty("id");
+        verify(videoPersistenceAdapter).createVideo(any());
     }
 
     @Test

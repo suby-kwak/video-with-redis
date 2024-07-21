@@ -6,11 +6,15 @@ import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.config.TestRedisConfig;
+import com.example.mytv.domain.Video;
 import com.example.mytv.util.RedisKeyGenerator;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,9 @@ public class VideoPersistenceAdapterIntTest {
     private VideoJpaRepository videoJpaRepository;
     @Autowired
     private RedisTemplate<String, Long> redisTemplate;
+    @Autowired
+    @Qualifier("redisListCacheManager")
+    private CacheManager redisListCacheManager;
 
     @Test
     void loadVideo() {
@@ -44,6 +51,25 @@ public class VideoPersistenceAdapterIntTest {
         }
 
         verify(videoJpaRepository, times(1)).findByChannelId("channelId");
+    }
+
+    @Test
+    void createVideoThenEvictVideoListCache() {
+        // Given
+        sut.loadVideoByChannel("channel1");
+        System.out.println(redisListCacheManager.getCache("video:list").get("channel1"));
+
+        var video = Video.builder()
+            .id("video3").title("video3").description("video3").thumbnailUrl("https://example.com/image.jpg")
+            .channelId("channel1").publishedAt(LocalDateTime.now())
+            .build();
+
+        // When
+        sut.createVideo(video);
+
+        // Then
+        then(redisListCacheManager.getCache("video:list").get("channel1"))
+            .isNull();
     }
 
     @Test

@@ -1,11 +1,9 @@
 package com.example.mytv.domain;
 
-import com.example.mytv.domain.channel.Channel;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Getter
@@ -15,7 +13,7 @@ public class Video {
     private String title;
     private String description;
     private String thumbnailUrl;
-    private Channel channel;
+    private String channelId;
     private Long viewCount;
     private LocalDateTime publishedAt;
 

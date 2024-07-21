@@ -41,7 +41,7 @@ class ChannelPersistenceAdapterTest {
             given(channelRedisRepository.save(any())).willReturn(ChannelRedisHash.from(channel));
 
             // When
-            sut.saveChannel(channel);
+            sut.createChannel(channel);
 
             // Then
             verify(channelJpaRepository).save(any());
