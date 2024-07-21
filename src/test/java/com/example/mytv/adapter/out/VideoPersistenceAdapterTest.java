@@ -7,8 +7,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import com.example.mytv.adapter.in.api.dto.VideoRequest;
+import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntityFixtures;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
+import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.VideoFixtures;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -82,6 +87,24 @@ class VideoPersistenceAdapterTest {
             .hasSize(2)
             .extracting("id")
             .containsExactly("video1", "video2");
+    }
+
+    @Test
+    void testCreateVideo() {
+        // Given
+        var video = VideoFixtures.stub("videoId");
+        ArgumentCaptor<VideoJpaEntity> argumentCaptor = ArgumentCaptor.forClass(VideoJpaEntity.class);
+
+        // When
+        sut.createVideo(video);
+
+        // Then
+        verify(videoJpaRepository).save(argumentCaptor.capture());
+        then(argumentCaptor.getValue())
+            .hasFieldOrPropertyWithValue("title", video.getTitle())
+            .hasFieldOrPropertyWithValue("description", video.getDescription())
+            .hasFieldOrPropertyWithValue("thumbnailUrl", video.getThumbnailUrl())
+            .hasFieldOrPropertyWithValue("channelId", video.getChannelId());
     }
 
     @Test

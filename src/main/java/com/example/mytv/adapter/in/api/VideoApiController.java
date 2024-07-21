@@ -1,5 +1,7 @@
 package com.example.mytv.adapter.in.api;
 
+import com.example.mytv.adapter.in.api.dto.CommandResponse;
+import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.application.port.in.VideoUseCase;
 import com.example.mytv.domain.Video;
 import java.util.List;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +28,12 @@ public class VideoApiController {
     @GetMapping(params = "channelId")
     public List<Video> listVideo(@RequestParam String channelId) {
         return videoUseCase.listVideos(channelId);
+    }
+
+    @PostMapping
+    public CommandResponse createVideo(@RequestBody VideoRequest videoRequest) {
+        var video = videoUseCase.createVideo(videoRequest);
+        return new CommandResponse(video.getId());
     }
 
     @PostMapping("{videoId}/view")

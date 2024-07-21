@@ -1,7 +1,7 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.util.CacheKeyNames.VIDEO;
-import static com.example.mytv.util.CacheKeyNames.VIDEO_LIST;
+import static com.example.mytv.util.CacheNames.VIDEO;
+import static com.example.mytv.util.CacheNames.VIDEO_LIST;
 import static com.example.mytv.util.RedisKeyGenerator.getVideoViewCountKey;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
@@ -11,6 +11,7 @@ import com.example.mytv.application.port.out.SaveVideoPort;
 import com.example.mytv.domain.Video;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,13 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
         return videoJpaRepository.findByChannelId(channelId).stream()
             .map(VideoJpaEntity::toDomain)
             .toList();
+    }
+
+    @Override
+    @CacheEvict(cacheManager = "redisListCacheManager", cacheNames = VIDEO_LIST, key = "#video.channelId")
+    public void createVideo(Video video) {
+        var videoJpaEntity = VideoJpaEntity.from(video);
+        videoJpaRepository.save(videoJpaEntity);
     }
 
     @Override

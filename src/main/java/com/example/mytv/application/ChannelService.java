@@ -43,7 +43,7 @@ public class ChannelService implements ChannelUseCase {
             .contentOwner(contentOwner)
             .build();
 
-        saveChannelPort.saveChannel(channel);
+        saveChannelPort.createChannel(channel);
         return channel;
     }
 
@@ -52,7 +52,7 @@ public class ChannelService implements ChannelUseCase {
         var channel = loadChannelPort.loadChannel(channelId).get();
         channel.updateSnippet(channelRequest.getSnippet());
 
-        saveChannelPort.saveChannel(channel);
+        saveChannelPort.createChannel(channel);
         return channel;
     }
 

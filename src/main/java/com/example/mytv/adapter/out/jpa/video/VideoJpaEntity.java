@@ -1,7 +1,11 @@
 package com.example.mytv.adapter.out.jpa.video;
 
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
+import com.example.mytv.adapter.out.jpa.channel.ChannelSnippetJpaEntity;
+import com.example.mytv.adapter.out.jpa.channel.ChannelStatisticsJpaEntity;
+import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.domain.Video;
+import com.example.mytv.domain.channel.Channel;
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,19 +25,28 @@ public class VideoJpaEntity {
     private String title;
     private String description;
     private String thumbnailUrl;
-    @ManyToOne
-    @JoinColumn(name = "channel_id")
-    private ChannelJpaEntity channel;
+    private String channelId;
     private LocalDateTime publishedAt;
 
     public Video toDomain() {
         return Video.builder()
-                .id(this.getId())
-                .title(this.getTitle())
-                .description(this.getDescription())
-                .thumbnailUrl(this.getThumbnailUrl())
-                .channel(this.getChannel().toDomain())
-                .publishedAt(this.getPublishedAt())
-                .build();
+            .id(this.getId())
+            .title(this.getTitle())
+            .description(this.getDescription())
+            .thumbnailUrl(this.getThumbnailUrl())
+            .channelId(this.channelId)
+            .publishedAt(this.getPublishedAt())
+            .build();
+    }
+
+    public static VideoJpaEntity from(Video video) {
+        return new VideoJpaEntity(
+            video.getId(),
+            video.getTitle(),
+            video.getDescription(),
+            video.getThumbnailUrl(),
+            video.getChannelId(),
+            video.getPublishedAt()
+        );
     }
 }
