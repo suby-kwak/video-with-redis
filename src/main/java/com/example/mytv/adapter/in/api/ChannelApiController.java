@@ -4,7 +4,6 @@ import com.example.mytv.adapter.in.api.dto.ChannelRequest;
 import com.example.mytv.adapter.in.api.dto.CommandResponse;
 import com.example.mytv.application.port.in.ChannelUseCase;
 import com.example.mytv.domain.channel.Channel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,7 @@ public class ChannelApiController {
         return new CommandResponse(channel.getId());
     }
 
-    @PutMapping("/{channelId}")
+    @PutMapping("{channelId}")
     public void updateChannel(
         @PathVariable String channelId,
         @RequestBody ChannelRequest channelRequest

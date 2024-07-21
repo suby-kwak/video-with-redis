@@ -31,7 +31,7 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     }
 
     @Override
-    @Cacheable(cacheManager = "redisListCacheManager", cacheNames = VIDEO_LIST, key = "#channelId")
+    @Cacheable(cacheNames = VIDEO_LIST, key = "#channelId")
     public List<Video> loadVideoByChannel(String channelId) {
         return videoJpaRepository.findByChannelId(channelId).stream()
             .map(VideoJpaEntity::toDomain)
@@ -39,7 +39,7 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     }
 
     @Override
-    @CacheEvict(cacheManager = "redisListCacheManager", cacheNames = VIDEO_LIST, key = "#video.channelId")
+    @CacheEvict(cacheNames = VIDEO_LIST, key = "#video.channelId")
     public void createVideo(Video video) {
         var videoJpaEntity = VideoJpaEntity.from(video);
         videoJpaRepository.save(videoJpaEntity);

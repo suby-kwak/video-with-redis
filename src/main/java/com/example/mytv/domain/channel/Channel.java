@@ -1,7 +1,6 @@
 package com.example.mytv.domain.channel;
 
 import com.example.mytv.adapter.in.api.dto.ChannelSnippetRequest;
-import com.example.mytv.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,7 @@ public class Channel {
     private String id;
     private ChannelSnippet snippet;
     private ChannelStatistics statistics;
-    private User contentOwner;
+    private String contentOwnerId;
 
     public void updateSnippet(ChannelSnippetRequest snippetRequest) {
         this.snippet = ChannelSnippet.builder()

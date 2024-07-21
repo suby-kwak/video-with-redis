@@ -39,7 +39,7 @@ class ChannelServiceTest {
     @DisplayName("createChannel")
     void testCreateChannel() {
         // Given
-        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title", "description", "https://example.com/thumbnail.jpg"), "userId");
+        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title", "description", "https://example.com/thumbnail.jpg"), "user");
         willDoNothing().given(saveChannelPort).createChannel(any());
         given(loadUserPort.loadUser(any())).willReturn(Optional.of(UserFixtures.stub()));
         // When
@@ -54,7 +54,7 @@ class ChannelServiceTest {
             .hasFieldOrPropertyWithValue("statistics.videoCount", 0L)
             .hasFieldOrPropertyWithValue("statistics.commentCount", 0L)
             .hasFieldOrPropertyWithValue("statistics.subscriberCount", 0L)
-            .hasFieldOrPropertyWithValue("contentOwner.id", "userId");
+            .hasFieldOrPropertyWithValue("contentOwnerId", "user");
     }
 
     @Test
@@ -62,7 +62,7 @@ class ChannelServiceTest {
     void testUpdateChannel() {
         // Given
         var channelId = "channelId";
-        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title2", "description2", "https://example.com/thumbnail2.jpg"), "userId");
+        var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title2", "description2", "https://example.com/thumbnail2.jpg"), "user");
         given(loadChannelPort.loadChannel(any())).willReturn(Optional.of(ChannelFixtures.stub(channelId)));
         willDoNothing().given(saveChannelPort).createChannel(any());
         // When
@@ -74,7 +74,7 @@ class ChannelServiceTest {
             .hasFieldOrPropertyWithValue("snippet.title", "title2")
             .hasFieldOrPropertyWithValue("snippet.description", "description2")
             .hasFieldOrPropertyWithValue("snippet.thumbnailUrl", "https://example.com/thumbnail2.jpg")
-            .hasFieldOrPropertyWithValue("contentOwner.id", "userId");
+            .hasFieldOrPropertyWithValue("contentOwnerId", "user");
     }
 
     @Test

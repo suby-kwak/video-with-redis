@@ -7,7 +7,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -30,13 +29,6 @@ public class RedisConfig {
             .build();
     }
 
-    @Bean
-    public CacheManager redisListCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        return RedisCacheManager.builder(redisConnectionFactory)
-            .cacheDefaults(listTypeCacheConfiguration())
-            .build();
-    }
-
     private RedisCacheConfiguration defaultCacheConfiguration() {
         return RedisCacheConfiguration
             .defaultCacheConfig()
@@ -44,7 +36,7 @@ public class RedisConfig {
             .disableCachingNullValues();
     }
 
-    private RedisCacheConfiguration listTypeCacheConfiguration() {
+    private RedisCacheConfiguration listCacheConfiguration() {
         var objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 

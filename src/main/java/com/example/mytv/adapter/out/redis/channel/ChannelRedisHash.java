@@ -1,29 +1,29 @@
 package com.example.mytv.adapter.out.redis.channel;
 
-import com.example.mytv.adapter.out.redis.user.UserRedisHash;
 import com.example.mytv.domain.channel.Channel;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 @RedisHash("channel")
 @AllArgsConstructor
 @Getter
-public class ChannelRedisHash implements Serializable {
+public class ChannelRedisHash {
     @Id
     private String id;
     private ChannelSnippetRedisHash snippet;
     private ChannelStatisticsRedisHash statistics;
-    private UserRedisHash contentOwner;
+    @Indexed
+    private String contentOwnerId;
 
     public Channel toDomain() {
         return Channel.builder()
             .id(this.getId())
             .snippet(this.getSnippet().toDomain())
             .statistics(this.getStatistics().toDomain())
-            .contentOwner(this.contentOwner.toDomain())
+            .contentOwnerId(this.getContentOwnerId())
             .build();
     }
 
@@ -32,7 +32,7 @@ public class ChannelRedisHash implements Serializable {
             channel.getId(),
             ChannelSnippetRedisHash.from(channel.getSnippet()),
             ChannelStatisticsRedisHash.from(channel.getStatistics()),
-            UserRedisHash.from(channel.getContentOwner())
+            channel.getContentOwnerId()
         );
     }
 }

@@ -40,7 +40,7 @@ public class ChannelService implements ChannelUseCase {
                     .commentCount(0)
                     .build()
             )
-            .contentOwner(contentOwner)
+            .contentOwnerId(request.getContentOwnerId())
             .build();
 
         saveChannelPort.createChannel(channel);

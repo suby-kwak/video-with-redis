@@ -11,7 +11,6 @@ import com.example.mytv.util.RedisKeyGenerator;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -31,8 +30,7 @@ public class VideoPersistenceAdapterIntTest {
     @Autowired
     private RedisTemplate<String, Long> redisTemplate;
     @Autowired
-    @Qualifier("redisListCacheManager")
-    private RedisCacheManager redisListCacheManager;
+    private RedisCacheManager redisCacheManager;
 
     @Test
     void loadVideo() {
@@ -57,7 +55,7 @@ public class VideoPersistenceAdapterIntTest {
     void createVideoThenEvictVideoListCache() {
         // Given
         sut.loadVideoByChannel("channel1");
-        System.out.println(redisListCacheManager.getCache("video:list").get("channel1"));
+        System.out.println(redisCacheManager.getCache("video:list").get("channel1"));
 
         var video = Video.builder()
             .id("video3").title("video3").description("video3").thumbnailUrl("https://example.com/image.jpg")
@@ -68,7 +66,7 @@ public class VideoPersistenceAdapterIntTest {
         sut.createVideo(video);
 
         // Then
-        then(redisListCacheManager.getCache("video:list").get("channel1"))
+        then(redisCacheManager.getCache("video:list").get("channel1"))
             .isNull();
     }
 
