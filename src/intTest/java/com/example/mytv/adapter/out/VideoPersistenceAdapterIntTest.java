@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class VideoPersistenceAdapterIntTest {
     private RedisTemplate<String, Long> redisTemplate;
     @Autowired
     @Qualifier("redisListCacheManager")
-    private CacheManager redisListCacheManager;
+    private RedisCacheManager redisListCacheManager;
 
     @Test
     void loadVideo() {

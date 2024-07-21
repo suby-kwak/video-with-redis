@@ -8,7 +8,5 @@ public interface LoadVideoPort {
     Video loadVideo(String videoId);
     List<Video> loadVideoByChannel(String channelId);
 
-    void createVideo(Video video);
-
     Long getViewCount(String videoId);
 }

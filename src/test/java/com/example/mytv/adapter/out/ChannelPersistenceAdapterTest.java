@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class ChannelPersistenceAdapterTest {
     private ChannelPersistenceAdapter sut;
@@ -30,22 +31,42 @@ class ChannelPersistenceAdapterTest {
     }
 
     @Nested
-    @DisplayName("saveChannel")
-    class SaveChannelTest {
+    @DisplayName("createChannel")
+    class CreateChannelTest {
         @Test
-        @DisplayName("Channel 을 Jpa, Redis 에 저장")
-        void saveChannel() {
+        @DisplayName("Channel 을 Jpa Repository 에 저장")
+        void createChannel() {
             // Given
             var channel = ChannelFixtures.stub("channelId");
-            given(channelJpaRepository.save(any())).willReturn(ChannelJpaEntity.from(channel));
-            given(channelRedisRepository.save(any())).willReturn(ChannelRedisHash.from(channel));
 
             // When
             sut.createChannel(channel);
 
             // Then
+            var argumentCaptor = ArgumentCaptor.forClass(ChannelJpaEntity.class);
+            verify(channelJpaRepository).save(argumentCaptor.capture());
+            then(argumentCaptor.getValue())
+                .hasFieldOrPropertyWithValue("id", channel.getId())
+                .hasFieldOrPropertyWithValue("snippet.title", channel.getSnippet().getTitle());
+        }
+    }
+
+    @Nested
+    @DisplayName("updateChannel")
+    class UpdateChannelTest {
+        @Test
+        @DisplayName("Channel 을 Jpa Repository 에 저장, Redis Repository에서 삭제")
+        void createChannel() {
+            // Given
+            var channelId = "channelId";
+            var channel = ChannelFixtures.stub(channelId);
+
+            // When
+            sut.updateChannel(channelId, channel);
+
+            // Then
             verify(channelJpaRepository).save(any());
-            verify(channelRedisRepository).save(any());
+            verify(channelRedisRepository).deleteById(channelId);
         }
     }
 

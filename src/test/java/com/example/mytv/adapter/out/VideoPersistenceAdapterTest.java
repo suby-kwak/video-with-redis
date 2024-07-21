@@ -7,11 +7,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntityFixtures;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
-import com.example.mytv.domain.Video;
 import com.example.mytv.domain.video.VideoFixtures;
 import java.util.List;
 import java.util.NoSuchElementException;

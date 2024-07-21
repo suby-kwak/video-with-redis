@@ -20,7 +20,7 @@ public class ChannelJpaEntity {
     private String id;
 
     @Embedded
-    private ChannelSnippetJpaEntity channelSnippet;
+    private ChannelSnippetJpaEntity snippet;
 
     @Embedded
     private ChannelStatisticsJpaEntity statistics;
@@ -32,7 +32,7 @@ public class ChannelJpaEntity {
     public Channel toDomain() {
         return Channel.builder()
             .id(this.getId())
-            .snippet(this.getChannelSnippet().toDomain())
+            .snippet(this.getSnippet().toDomain())
             .statistics(this.getStatistics().toDomain())
             .contentOwner(this.getContentOwner().toDomain())
             .build();

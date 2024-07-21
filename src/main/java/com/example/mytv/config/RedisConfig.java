@@ -24,36 +24,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     @Bean
     @Primary
-    public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        return RedisCacheManager.RedisCacheManagerBuilder
-            .fromConnectionFactory(redisConnectionFactory)
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
+        return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(defaultCacheConfiguration())
             .build();
     }
 
     @Bean
     public CacheManager redisListCacheManager(RedisConnectionFactory redisConnectionFactory) {
-        return RedisCacheManager.RedisCacheManagerBuilder
-            .fromConnectionFactory(redisConnectionFactory)
+        return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(listTypeCacheConfiguration())
             .build();
     }
 
     private RedisCacheConfiguration defaultCacheConfiguration() {
-        var objectMapper = new ObjectMapper();
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
-        objectMapper.registerModule(new JavaTimeModule());
-
         return RedisCacheConfiguration
             .defaultCacheConfig()
-            .disableCachingNullValues()
-            .entryTtl(Duration.ofDays(1L))
-            .computePrefixWith(CacheKeyPrefix.simple())
-            .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
-            );
+            .entryTtl(Duration.ofMinutes(5L))
+            .disableCachingNullValues();
     }
 
     private RedisCacheConfiguration listTypeCacheConfiguration() {
@@ -63,8 +51,7 @@ public class RedisConfig {
         return RedisCacheConfiguration
             .defaultCacheConfig()
             .disableCachingNullValues()
-            .entryTtl(Duration.ofDays(1L))
-            .computePrefixWith(CacheKeyPrefix.simple())
+            .entryTtl(Duration.ofMinutes(5L))
             .serializeKeysWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
             .serializeValuesWith(

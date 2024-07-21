@@ -8,7 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.dto.VideoRequestFixtures;
-import com.example.mytv.adapter.out.VideoPersistenceAdapter;
+import com.example.mytv.application.port.out.LoadVideoPort;
+import com.example.mytv.application.port.out.SaveVideoPort;
 import com.example.mytv.domain.video.VideoFixtures;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,11 +19,12 @@ import org.junit.jupiter.api.Test;
 class VideoServiceTest {
     private VideoService sut;
 
-    private final VideoPersistenceAdapter videoPersistenceAdapter = mock(VideoPersistenceAdapter.class);
+    private final LoadVideoPort loadVideoPort = mock(LoadVideoPort.class);
+    private final SaveVideoPort saveVideoPort = mock(SaveVideoPort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new VideoService(videoPersistenceAdapter);
+        sut = new VideoService(loadVideoPort, saveVideoPort);
     }
 
     @Test
@@ -30,8 +32,8 @@ class VideoServiceTest {
     void testLoadVideo() {
         // Given
         var videoId = "videoId";
-        given(videoPersistenceAdapter.loadVideo(any())).willReturn(VideoFixtures.stub(videoId));
-        given(videoPersistenceAdapter.getViewCount(any())).willReturn(150L);
+        given(loadVideoPort.loadVideo(any())).willReturn(VideoFixtures.stub(videoId));
+        given(loadVideoPort.getViewCount(any())).willReturn(150L);
         // When
         var result = sut.getVideo(videoId);
         // Then
@@ -49,8 +51,8 @@ class VideoServiceTest {
         var list = LongStream.range(1L, 4L)
             .mapToObj(i -> VideoFixtures.stub("videoId" + i))
             .toList();
-        given(videoPersistenceAdapter.loadVideoByChannel(any())).willReturn(list);
-        given(videoPersistenceAdapter.getViewCount(any())).willReturn(100L, 150L, 200L);
+        given(loadVideoPort.loadVideoByChannel(any())).willReturn(list);
+        given(loadVideoPort.getViewCount(any())).willReturn(100L, 150L, 200L);
         // When
         var result = sut.listVideos(channelId);
         // Then
@@ -64,7 +66,7 @@ class VideoServiceTest {
     @Test
     void testCreateVideo() {
         var videoRequest = VideoRequestFixtures.stub();
-        willDoNothing().given(videoPersistenceAdapter).createVideo(any());
+        willDoNothing().given(saveVideoPort).createVideo(any());
 
         var result = sut.createVideo(videoRequest);
 
@@ -72,15 +74,13 @@ class VideoServiceTest {
         then(result)
             .isNotNull()
             .hasFieldOrProperty("id");
-        verify(videoPersistenceAdapter).createVideo(any());
+        verify(saveVideoPort).createVideo(any());
     }
 
     @Test
     void testIncrementViewCount() {
-        given(videoPersistenceAdapter.loadVideo(any())).willReturn(VideoFixtures.stub("videoId"));
-
         sut.increaseViewCount("videoId");
 
-        verify(videoPersistenceAdapter).incrementViewCount("videoId");
+        verify(saveVideoPort).incrementViewCount("videoId");
     }
 }

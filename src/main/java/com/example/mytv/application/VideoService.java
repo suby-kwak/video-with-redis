@@ -3,6 +3,8 @@ package com.example.mytv.application;
 import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.adapter.out.VideoPersistenceAdapter;
 import com.example.mytv.application.port.in.VideoUseCase;
+import com.example.mytv.application.port.out.LoadVideoPort;
+import com.example.mytv.application.port.out.SaveVideoPort;
 import com.example.mytv.domain.Video;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,16 +13,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VideoService implements VideoUseCase {
-    private final VideoPersistenceAdapter videoPersistenceAdapter;
+    private final LoadVideoPort loadVideoPort;
+    private final SaveVideoPort saveVideoPort;
 
-    public VideoService(VideoPersistenceAdapter videoPersistenceAdapter) {
-        this.videoPersistenceAdapter = videoPersistenceAdapter;
+    public VideoService(LoadVideoPort loadVideoPort, SaveVideoPort saveVideoPort) {
+        this.loadVideoPort = loadVideoPort;
+        this.saveVideoPort = saveVideoPort;
     }
 
     @Override
     public Video getVideo(String videoId) {
-        var video = videoPersistenceAdapter.loadVideo(videoId);
-        var viewCount = videoPersistenceAdapter.getViewCount(videoId);
+        var video = loadVideoPort.loadVideo(videoId);
+        var viewCount = loadVideoPort.getViewCount(videoId);
         video.bindViewCount(viewCount);
 
         return video;
@@ -28,9 +32,9 @@ public class VideoService implements VideoUseCase {
 
     @Override
     public List<Video> listVideos(String channelId) {
-        return videoPersistenceAdapter.loadVideoByChannel(channelId).stream()
+        return loadVideoPort.loadVideoByChannel(channelId).stream()
             .map(video -> {
-                var viewCount = videoPersistenceAdapter.getViewCount(video.getId());
+                var viewCount = loadVideoPort.getViewCount(video.getId());
                 video.bindViewCount(viewCount);
                 return video;
             })
@@ -47,12 +51,12 @@ public class VideoService implements VideoUseCase {
                 .channelId(videoRequest.getChannelId())
                 .publishedAt(LocalDateTime.now())
                 .build();
-        videoPersistenceAdapter.createVideo(video);
+        saveVideoPort.createVideo(video);
         return video;
     }
 
     @Override
     public void increaseViewCount(String videoId) {
-        videoPersistenceAdapter.incrementViewCount(videoId);
+        saveVideoPort.incrementViewCount(videoId);
     }
 }
