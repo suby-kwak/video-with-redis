@@ -66,6 +66,17 @@ public class ChannelPersistenceAdapterIntTest {
     @DisplayName("save Channel")
     class SaveChannel {
         @Test
+        void testCreateAndRedisDelete() {
+            var channel = ChannelFixtures.stub("channelTest");
+            sut.saveChannel(channel);
+
+            then(channelJpaRepository.findById("channelTest"))
+                .isPresent();
+            then(channelRedisRepository.findById("channelTest"))
+                .isNotPresent();
+        }
+
+        @Test
         void testUpdateAndLoadChannel() {
             // given
             var channel = sut.loadChannel("channel1").get();

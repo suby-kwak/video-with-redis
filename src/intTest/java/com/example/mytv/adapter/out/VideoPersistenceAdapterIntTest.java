@@ -92,11 +92,11 @@ public class VideoPersistenceAdapterIntTest {
 
     @Test
     void incrVideoViewCount() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             sut.incrementViewCount("video1");
         }
 
         var result = redisTemplate.opsForValue().get(RedisKeyGenerator.getVideoViewCountKey("video1"));
-        then(result).isEqualTo(3L);
+        then(result).isEqualTo(5L);
     }
 }

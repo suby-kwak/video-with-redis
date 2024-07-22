@@ -30,8 +30,10 @@ public class ChannelPersistenceAdapter implements LoadChannelPort, SaveChannelPo
     @Override
     public Optional<Channel> loadChannel(String id) {
         return channelRedisRepository.findById(id)
+                // redis cache hit
                 .map(ChannelRedisHash::toDomain)
                 .or(() -> {
+                    // redis cache miss
                     var optionalEntity = channelJpaRepository.findById(id);
                     optionalEntity.ifPresent(jpaEntity -> channelRedisRepository.save(ChannelRedisHash.from(jpaEntity.toDomain())));
 
