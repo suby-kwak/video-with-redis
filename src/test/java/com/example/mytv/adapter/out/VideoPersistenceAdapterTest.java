@@ -94,7 +94,7 @@ class VideoPersistenceAdapterTest {
         ArgumentCaptor<VideoJpaEntity> argumentCaptor = ArgumentCaptor.forClass(VideoJpaEntity.class);
 
         // When
-        sut.createVideo(video);
+        sut.saveVideo(video);
 
         // Then
         verify(videoJpaRepository).save(argumentCaptor.capture());

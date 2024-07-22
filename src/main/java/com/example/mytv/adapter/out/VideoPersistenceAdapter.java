@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -39,8 +40,11 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     }
 
     @Override
-    @CacheEvict(cacheNames = VIDEO_LIST, key = "#video.channelId")
-    public void createVideo(Video video) {
+    @Caching(evict = {
+        @CacheEvict(cacheNames = VIDEO_LIST, key = "#video.channelId"),
+        @CacheEvict(cacheNames = VIDEO, key = "#video.id")
+    })
+    public void saveVideo(Video video) {
         var videoJpaEntity = VideoJpaEntity.from(video);
         videoJpaRepository.save(videoJpaEntity);
     }

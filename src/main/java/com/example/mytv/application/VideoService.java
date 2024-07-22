@@ -1,7 +1,6 @@
 package com.example.mytv.application;
 
 import com.example.mytv.adapter.in.api.dto.VideoRequest;
-import com.example.mytv.adapter.out.VideoPersistenceAdapter;
 import com.example.mytv.application.port.in.VideoUseCase;
 import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
@@ -51,12 +50,16 @@ public class VideoService implements VideoUseCase {
                 .channelId(videoRequest.getChannelId())
                 .publishedAt(LocalDateTime.now())
                 .build();
-        saveVideoPort.createVideo(video);
+        saveVideoPort.saveVideo(video);
         return video;
     }
 
     @Override
     public void increaseViewCount(String videoId) {
         saveVideoPort.incrementViewCount(videoId);
+    }
+
+    @Override
+    public void syncViewCount(String videoId) {
     }
 }

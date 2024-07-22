@@ -66,7 +66,7 @@ class VideoServiceTest {
     @Test
     void testCreateVideo() {
         var videoRequest = VideoRequestFixtures.stub();
-        willDoNothing().given(saveVideoPort).createVideo(any());
+        willDoNothing().given(saveVideoPort).saveVideo(any());
 
         var result = sut.createVideo(videoRequest);
 
@@ -74,7 +74,7 @@ class VideoServiceTest {
         then(result)
             .isNotNull()
             .hasFieldOrProperty("id");
-        verify(saveVideoPort).createVideo(any());
+        verify(saveVideoPort).saveVideo(any());
     }
 
     @Test

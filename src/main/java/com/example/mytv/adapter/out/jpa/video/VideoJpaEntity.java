@@ -1,16 +1,9 @@
 package com.example.mytv.adapter.out.jpa.video;
 
-import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
-import com.example.mytv.adapter.out.jpa.channel.ChannelSnippetJpaEntity;
-import com.example.mytv.adapter.out.jpa.channel.ChannelStatisticsJpaEntity;
-import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.domain.Video;
-import com.example.mytv.domain.channel.Channel;
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

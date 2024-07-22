@@ -52,7 +52,7 @@ public class VideoPersistenceAdapterIntTest {
     }
 
     @Test
-    void createVideoThenEvictVideoListCache() {
+    void saveVideoThenEvictVideoListCache() {
         // Given
         sut.loadVideoByChannel("channel1");
         System.out.println(redisCacheManager.getCache("video:list").get("channel1"));
@@ -63,10 +63,30 @@ public class VideoPersistenceAdapterIntTest {
             .build();
 
         // When
-        sut.createVideo(video);
+        sut.saveVideo(video);
 
         // Then
         then(redisCacheManager.getCache("video:list").get("channel1"))
+            .isNull();
+    }
+
+    @Test
+    void saveVideoThenEvictVideoCache() {
+        // Given
+        var video = sut.loadVideo("video1");
+        System.out.println(redisCacheManager.getCache("video").get("video1"));
+
+        var updatedVideo = Video.builder()
+            .id(video.getId()).title(video.getTitle()).description(video.getDescription()).thumbnailUrl(video.getThumbnailUrl())
+            .viewCount(200L)
+            .channelId(video.getChannelId()).publishedAt(video.getPublishedAt())
+            .build();
+
+        // When
+        sut.saveVideo(updatedVideo);
+
+        // Then
+        then(redisCacheManager.getCache("video").get("video1"))
             .isNull();
     }
 
