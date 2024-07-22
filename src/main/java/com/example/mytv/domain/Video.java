@@ -18,6 +18,7 @@ public class Video implements Serializable {
     private String title;
     private String description;
     private String thumbnailUrl;
+    private String fileUrl;
     private String channelId;
     private Long viewCount;
     private LocalDateTime publishedAt;

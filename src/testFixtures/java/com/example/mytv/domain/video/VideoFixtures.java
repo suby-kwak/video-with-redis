@@ -10,6 +10,7 @@ public class VideoFixtures {
             .title("video title")
             .description("video description")
             .thumbnailUrl("https://example.com/thumbnail.jpg")
+            .fileUrl("https://example.com/video.mp4")
             .channelId("channelId")
             .viewCount(0L)
             .build();

@@ -102,6 +102,7 @@ class VideoPersistenceAdapterTest {
             .hasFieldOrPropertyWithValue("title", video.getTitle())
             .hasFieldOrPropertyWithValue("description", video.getDescription())
             .hasFieldOrPropertyWithValue("thumbnailUrl", video.getThumbnailUrl())
+            .hasFieldOrPropertyWithValue("fileUrl", video.getFileUrl())
             .hasFieldOrPropertyWithValue("channelId", video.getChannelId());
     }
 

@@ -18,6 +18,7 @@ public class VideoJpaEntity {
     private String title;
     private String description;
     private String thumbnailUrl;
+    private String fileUrl;
     private String channelId;
     private LocalDateTime publishedAt;
 
@@ -27,6 +28,7 @@ public class VideoJpaEntity {
             .title(this.getTitle())
             .description(this.getDescription())
             .thumbnailUrl(this.getThumbnailUrl())
+            .fileUrl(this.getFileUrl())
             .channelId(this.channelId)
             .publishedAt(this.getPublishedAt())
             .build();
@@ -38,6 +40,7 @@ public class VideoJpaEntity {
             video.getTitle(),
             video.getDescription(),
             video.getThumbnailUrl(),
+            video.getFileUrl(),
             video.getChannelId(),
             video.getPublishedAt()
         );

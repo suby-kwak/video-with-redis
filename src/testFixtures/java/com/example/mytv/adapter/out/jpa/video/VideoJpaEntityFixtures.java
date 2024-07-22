@@ -1,6 +1,5 @@
 package com.example.mytv.adapter.out.jpa.video;
 
-import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntityFixtures;
 import java.time.LocalDateTime;
 
 public class VideoJpaEntityFixtures {
@@ -9,7 +8,8 @@ public class VideoJpaEntityFixtures {
             id,
             "title",
             "description",
-            "https://example.com/thumbnail",
+            "https://example.com/thumbnail.jpg",
+            "https://example.com/video.mp4",
             "channelId",
             LocalDateTime.now()
         );
