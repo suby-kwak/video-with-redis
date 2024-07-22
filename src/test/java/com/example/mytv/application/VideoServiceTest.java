@@ -8,9 +8,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.dto.VideoRequestFixtures;
+import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.LoadVideoPort;
+import com.example.mytv.application.port.out.SaveChannelPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
+import com.example.mytv.domain.channel.ChannelFixtures;
 import com.example.mytv.domain.video.VideoFixtures;
+import java.util.Optional;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +25,12 @@ class VideoServiceTest {
 
     private final LoadVideoPort loadVideoPort = mock(LoadVideoPort.class);
     private final SaveVideoPort saveVideoPort = mock(SaveVideoPort.class);
+    private final LoadChannelPort loadChannelPort = mock(LoadChannelPort.class);
+    private final SaveChannelPort saveChannelPort = mock(SaveChannelPort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new VideoService(loadVideoPort, saveVideoPort);
+        sut = new VideoService(loadVideoPort, saveVideoPort, loadChannelPort, saveChannelPort);
     }
 
     @Test
@@ -67,6 +73,7 @@ class VideoServiceTest {
     void testCreateVideo() {
         var videoRequest = VideoRequestFixtures.stub();
         willDoNothing().given(saveVideoPort).saveVideo(any());
+        given(loadChannelPort.loadChannel(any())).willReturn(Optional.of(ChannelFixtures.stub(videoRequest.getChannelId())));
 
         var result = sut.createVideo(videoRequest);
 
@@ -75,6 +82,7 @@ class VideoServiceTest {
             .isNotNull()
             .hasFieldOrProperty("id");
         verify(saveVideoPort).saveVideo(any());
+        verify(saveChannelPort).saveChannel(any());
     }
 
     @Test

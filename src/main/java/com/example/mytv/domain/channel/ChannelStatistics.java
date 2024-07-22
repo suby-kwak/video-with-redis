@@ -11,4 +11,8 @@ public class ChannelStatistics {
     private long videoCount;
     private long subscriberCount;
     private long commentCount;
+
+    public void updateVideoCount(Long videoCount) {
+        this.videoCount = videoCount;
+    }
 }

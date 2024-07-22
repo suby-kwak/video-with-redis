@@ -2,7 +2,9 @@ package com.example.mytv.application;
 
 import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.application.port.in.VideoUseCase;
+import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.LoadVideoPort;
+import com.example.mytv.application.port.out.SaveChannelPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
 import com.example.mytv.domain.Video;
 import java.time.LocalDateTime;
@@ -14,10 +16,14 @@ import org.springframework.stereotype.Service;
 public class VideoService implements VideoUseCase {
     private final LoadVideoPort loadVideoPort;
     private final SaveVideoPort saveVideoPort;
+    private final LoadChannelPort loadChannelPort;
+    private final SaveChannelPort saveChannelPort;
 
-    public VideoService(LoadVideoPort loadVideoPort, SaveVideoPort saveVideoPort) {
+    public VideoService(LoadVideoPort loadVideoPort, SaveVideoPort saveVideoPort, LoadChannelPort loadChannelPort, SaveChannelPort saveChannelPort) {
         this.loadVideoPort = loadVideoPort;
         this.saveVideoPort = saveVideoPort;
+        this.loadChannelPort = loadChannelPort;
+        this.saveChannelPort = saveChannelPort;
     }
 
     @Override
@@ -51,6 +57,10 @@ public class VideoService implements VideoUseCase {
                 .publishedAt(LocalDateTime.now())
                 .build();
         saveVideoPort.saveVideo(video);
+
+        var channel = loadChannelPort.loadChannel(videoRequest.getChannelId()).get();
+        channel.getStatistics().updateVideoCount(channel.getStatistics().getVideoCount() + 1);
+        saveChannelPort.saveChannel(channel);
 
         return video;
     }

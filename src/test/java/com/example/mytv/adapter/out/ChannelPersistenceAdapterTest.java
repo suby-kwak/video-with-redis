@@ -31,16 +31,16 @@ class ChannelPersistenceAdapterTest {
     }
 
     @Nested
-    @DisplayName("createChannel")
-    class CreateChannelTest {
+    @DisplayName("saveChannel")
+    class SaveChannelTest {
         @Test
         @DisplayName("Channel 을 Jpa Repository 에 저장")
-        void createChannel() {
+        void saveChannel() {
             // Given
             var channel = ChannelFixtures.stub("channelId");
 
             // When
-            sut.createChannel(channel);
+            sut.saveChannel(channel);
 
             // Then
             var argumentCaptor = ArgumentCaptor.forClass(ChannelJpaEntity.class);
@@ -48,25 +48,7 @@ class ChannelPersistenceAdapterTest {
             then(argumentCaptor.getValue())
                 .hasFieldOrPropertyWithValue("id", channel.getId())
                 .hasFieldOrPropertyWithValue("snippet.title", channel.getSnippet().getTitle());
-        }
-    }
-
-    @Nested
-    @DisplayName("updateChannel")
-    class UpdateChannelTest {
-        @Test
-        @DisplayName("Channel 을 Jpa Repository 에 저장, Redis Repository에서 삭제")
-        void createChannel() {
-            // Given
-            var channelId = "channelId";
-            var channel = ChannelFixtures.stub(channelId);
-
-            // When
-            sut.updateChannel(channelId, channel);
-
-            // Then
-            verify(channelJpaRepository).save(any());
-            verify(channelRedisRepository).deleteById(channelId);
+            verify(channelRedisRepository).deleteById("channelId");
         }
     }
 

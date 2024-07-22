@@ -63,8 +63,8 @@ public class ChannelPersistenceAdapterIntTest {
     }
 
     @Nested
-    @DisplayName("update Channel")
-    class UpdateChannel {
+    @DisplayName("save Channel")
+    class SaveChannel {
         @Test
         void testUpdateAndLoadChannel() {
             // given
@@ -78,7 +78,7 @@ public class ChannelPersistenceAdapterIntTest {
                 .build();
 
             // When
-            sut.updateChannel("channel1", updatedChannel);
+            sut.saveChannel(updatedChannel);
 
             // Then
             var result = sut.loadChannel("channel1");

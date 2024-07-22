@@ -32,7 +32,7 @@ class ChannelServiceTest {
     void testCreateChannel() {
         // Given
         var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title", "description", "https://example.com/thumbnail.jpg"), "user");
-        willDoNothing().given(saveChannelPort).createChannel(any());
+        willDoNothing().given(saveChannelPort).saveChannel(any());
         // When
         var result = sut.createChannel(channelRequest);
         // Then
@@ -55,7 +55,7 @@ class ChannelServiceTest {
         var channelId = "channelId";
         var channelRequest = new ChannelRequest(new ChannelSnippetRequest("title2", "description2", "https://example.com/thumbnail2.jpg"), "user");
         given(loadChannelPort.loadChannel(any())).willReturn(Optional.of(ChannelFixtures.stub(channelId)));
-        willDoNothing().given(saveChannelPort).createChannel(any());
+        willDoNothing().given(saveChannelPort).saveChannel(any());
         // When
         var result = sut.updateChannel(channelId, channelRequest);
         // Then

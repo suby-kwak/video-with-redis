@@ -22,14 +22,9 @@ public class ChannelPersistenceAdapter implements LoadChannelPort, SaveChannelPo
     }
 
     @Override
-    public void createChannel(Channel channel) {
+    public void saveChannel(Channel channel) {
         channelJpaRepository.save(ChannelJpaEntity.from(channel));
-    }
-
-    @Override
-    public void updateChannel(String channelId, Channel channel) {
-        channelJpaRepository.save(ChannelJpaEntity.from(channel));
-        channelRedisRepository.deleteById(channelId);
+        channelRedisRepository.deleteById(channel.getId());
     }
 
     @Override
