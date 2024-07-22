@@ -14,15 +14,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class ChannelService implements ChannelUseCase {
     private final LoadChannelPort loadChannelPort;
-    private final LoadUserPort loadUserPort;
     private final SaveChannelPort saveChannelPort;
+
+    public ChannelService(LoadChannelPort loadChannelPort, SaveChannelPort saveChannelPort) {
+        this.loadChannelPort = loadChannelPort;
+        this.saveChannelPort = saveChannelPort;
+    }
 
     @Override
     public Channel createChannel(ChannelRequest request) {
-        var contentOwner = loadUserPort.loadUser(request.getContentOwnerId()).get();
         var channel = Channel.builder()
             .id(UUID.randomUUID().toString())
             .snippet(

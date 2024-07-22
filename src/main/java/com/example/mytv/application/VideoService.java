@@ -51,15 +51,12 @@ public class VideoService implements VideoUseCase {
                 .publishedAt(LocalDateTime.now())
                 .build();
         saveVideoPort.saveVideo(video);
+
         return video;
     }
 
     @Override
     public void increaseViewCount(String videoId) {
         saveVideoPort.incrementViewCount(videoId);
-    }
-
-    @Override
-    public void syncViewCount(String videoId) {
     }
 }

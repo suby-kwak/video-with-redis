@@ -10,7 +10,6 @@ import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
 import com.example.mytv.domain.Video;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -18,10 +17,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     private final VideoJpaRepository videoJpaRepository;
     private final RedisTemplate<String, Long> redisTemplate;
+
+    public VideoPersistenceAdapter(VideoJpaRepository videoJpaRepository, RedisTemplate<String, Long> redisTemplate) {
+        this.videoJpaRepository = videoJpaRepository;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     @Cacheable(cacheNames = VIDEO, key = "#videoId")

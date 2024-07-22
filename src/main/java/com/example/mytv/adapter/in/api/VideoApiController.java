@@ -5,7 +5,6 @@ import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.application.port.in.VideoUseCase;
 import com.example.mytv.domain.Video;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/videos")
-@RequiredArgsConstructor
 public class VideoApiController {
     private final VideoUseCase videoUseCase;
+
+    public VideoApiController(VideoUseCase videoUseCase) {
+        this.videoUseCase = videoUseCase;
+    }
 
     @GetMapping("{videoId}")
     public Video getVideo(@PathVariable String videoId) {
