@@ -13,7 +13,10 @@ import com.example.mytv.config.TestRedisConfig;
 import com.example.mytv.domain.channel.Channel;
 import com.example.mytv.domain.channel.ChannelFixtures;
 import com.example.mytv.domain.channel.ChannelSnippet;
+import com.example.mytv.domain.channel.ChannelStatistics;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = TestRedisConfig.class)
 @Transactional
-@Sql("/com/example/mytv/adapter/out/VideoPersistenceAdapterIntTest.sql")
+@Sql("/com/example/mytv/adapter/out/ChannelPersistenceAdapterIntTest.sql")
 public class ChannelPersistenceAdapterIntTest {
     @Autowired
     private ChannelPersistenceAdapter sut;
@@ -35,16 +38,23 @@ public class ChannelPersistenceAdapterIntTest {
     @SpyBean
     private ChannelRedisRepository channelRedisRepository;
 
+    @BeforeEach
+    void setUp() {
+        channelRedisRepository.deleteAll();
+    }
+
     @Nested
     @DisplayName("loadChannel")
     class LoadChannelTest {
         @Test
         @DisplayName("Redis cache에서 찾을 수 없으면 Jpa 에서 찾음")
         void cacheMissAndJpaHitTest() {
+            // when
             for (int i = 0; i < 3; i++) {
                 sut.loadChannel("channel1");
             }
 
+            // then
             verify(channelJpaRepository, times(1)).findById("channel1");
             verify(channelRedisRepository, times(3)).findById("channel1");
         }
@@ -52,7 +62,12 @@ public class ChannelPersistenceAdapterIntTest {
         @Test
         @DisplayName("Redis Cache에서 찾을 수 있으면 Jpa 호출하지 않음")
         void cacheHitTest() {
-            when(channelRedisRepository.findById("channel1")).thenReturn(Optional.of(ChannelRedisHash.from(ChannelFixtures.stub("channelId"))));
+            var channel = Channel.builder().id("channel1").contentOwnerId("user")
+                    .statistics(ChannelStatistics.getDefaultStatistics())
+                    .snippet(ChannelSnippet.builder().title("channel").description("desc").thumbnailUrl("thumb").build())
+                    .build();
+            channelRedisRepository.save(ChannelRedisHash.from(channel));
+            //when(channelRedisRepository.findById("channel1")).thenReturn(Optional.of(ChannelRedisHash.from(ChannelFixtures.stub("channelId"))));
 
             for (int i = 0; i < 3; i++) {
                 sut.loadChannel("channel1");

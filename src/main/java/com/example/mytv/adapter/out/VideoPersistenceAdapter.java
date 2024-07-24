@@ -48,8 +48,7 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
         @CacheEvict(cacheNames = VIDEO, key = "#video.id")
     })
     public void saveVideo(Video video) {
-        var videoJpaEntity = VideoJpaEntity.from(video);
-        videoJpaRepository.save(videoJpaEntity);
+        videoJpaRepository.save(VideoJpaEntity.from(video));
     }
 
     @Override
@@ -57,14 +56,15 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
         var videoViewCountKey = getVideoViewCountKey(videoId);
         redisTemplate.opsForValue().increment(videoViewCountKey);
 
-//        // Using RedisAtomicLong
+//        Using RedisAtomicLong
 //        RedisAtomicLong redisAtomicLong = new RedisAtomicLong(videoViewCountKey, redisTemplate.getConnectionFactory());
-//        redisAtomicLong.incrementAndGet()
+//        redisAtomicLong.incrementAndGet();
     }
 
     @Override
     public Long getViewCount(String videoId) {
         var videoViewCountKey = getVideoViewCountKey(videoId);
-        return redisTemplate.opsForValue().get(videoViewCountKey);
+        var viewCont = redisTemplate.opsForValue().get(videoViewCountKey);
+        return viewCont == null ? 0 : viewCont;
     }
 }
