@@ -33,13 +33,7 @@ public class ChannelService implements ChannelUseCase {
                     .publishedAt(LocalDateTime.now())
                     .build()
             )
-            .statistics(
-                ChannelStatistics.builder()
-                    .subscriberCount(0)
-                    .videoCount(0)
-                    .commentCount(0)
-                    .build()
-            )
+            .statistics(ChannelStatistics.getDefaultStatistics())
             .contentOwnerId(request.getContentOwnerId())
             .build();
 

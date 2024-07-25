@@ -1,7 +1,6 @@
 package com.example.mytv.application.port.out;
 
-import com.example.mytv.adapter.in.api.dto.VideoRequest;
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import java.util.List;
 
 public interface LoadVideoPort {

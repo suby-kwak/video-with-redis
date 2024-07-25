@@ -3,7 +3,7 @@ package com.example.mytv.adapter.in.api;
 import com.example.mytv.adapter.in.api.dto.CommandResponse;
 import com.example.mytv.adapter.in.api.dto.VideoRequest;
 import com.example.mytv.application.port.in.VideoUseCase;
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

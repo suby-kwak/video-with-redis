@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -32,7 +33,7 @@ public class RedisConfig {
     private RedisCacheConfiguration defaultCacheConfiguration() {
         return RedisCacheConfiguration
             .defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(5L))
+            .entryTtl(Duration.ofHours(1L))
             .disableCachingNullValues();
     }
 
