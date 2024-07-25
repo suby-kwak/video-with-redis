@@ -9,8 +9,9 @@ class VideoTest {
     @Test
     void testBindViewCount() {
         var video = VideoFixtures.stub("videoId");
-        video.bindViewCount(100L);
+        video.bindCount(100L, 30L);
 
         then(video.getViewCount()).isEqualTo(100L);
+        then(video.getLikeCount()).isEqualTo(30L);
     }
 }

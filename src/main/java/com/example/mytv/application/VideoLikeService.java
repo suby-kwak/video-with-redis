@@ -24,11 +24,11 @@ public class VideoLikeService implements VideoLikeUseCase {
 
     @Override
     public Boolean isLikedVideo(String videoId, String userId) {
-        return false;
+        return videoLikePort.isVideoLikeMember(videoId, userId);
     }
 
     @Override
     public Long getVideoLikeCount(String videoId) {
-        return null;
+        return videoLikePort.getVideoLikeCount(videoId);
     }
 }

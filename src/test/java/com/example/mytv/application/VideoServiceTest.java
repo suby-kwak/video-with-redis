@@ -12,6 +12,7 @@ import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveChannelPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
+import com.example.mytv.application.port.out.VideoLikePort;
 import com.example.mytv.domain.channel.ChannelFixtures;
 import com.example.mytv.domain.video.VideoFixtures;
 import java.util.Optional;
@@ -25,12 +26,13 @@ class VideoServiceTest {
 
     private final LoadVideoPort loadVideoPort = mock(LoadVideoPort.class);
     private final SaveVideoPort saveVideoPort = mock(SaveVideoPort.class);
+    private final VideoLikePort videoLikePort = mock(VideoLikePort.class);
     private final LoadChannelPort loadChannelPort = mock(LoadChannelPort.class);
     private final SaveChannelPort saveChannelPort = mock(SaveChannelPort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new VideoService(loadVideoPort, saveVideoPort, loadChannelPort, saveChannelPort);
+        sut = new VideoService(loadVideoPort, saveVideoPort, videoLikePort, loadChannelPort, saveChannelPort);
     }
 
     @Test
@@ -40,13 +42,16 @@ class VideoServiceTest {
         var videoId = "videoId";
         given(loadVideoPort.loadVideo(any())).willReturn(VideoFixtures.stub(videoId));
         given(loadVideoPort.getViewCount(any())).willReturn(150L);
+        given(videoLikePort.getVideoLikeCount(any())).willReturn(100L);
         // When
         var result = sut.getVideo(videoId);
         // Then
         then(result)
             .isNotNull()
             .hasFieldOrPropertyWithValue("id", videoId)
-            .hasFieldOrPropertyWithValue("viewCount", 150L);
+            .hasFieldOrPropertyWithValue("viewCount", 150L)
+            .hasFieldOrPropertyWithValue("likeCount", 100L);
+
     }
 
     @Test

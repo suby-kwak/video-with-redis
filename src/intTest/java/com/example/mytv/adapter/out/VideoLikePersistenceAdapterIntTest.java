@@ -57,4 +57,20 @@ public class VideoLikePersistenceAdapterIntTest {
                 .isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("videoId 로 생성된 VideoLike 키로 user 수 count")
+    class CountLikeVideo {
+        @Test
+        @DisplayName("add 한 user 수 만큼 count 값 반환")
+        void testAddLikeVideo() {
+            for (int i = 0; i < 10; i++) {
+                redisTemplate.opsForSet().add(getVideoLikeKey("videoId"), "userId" + i);
+            }
+
+            var result = sut.getVideoLikeCount("videoId");
+
+            then(result).isEqualTo(10);
+        }
+    }
 }

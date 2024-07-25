@@ -6,7 +6,8 @@ import com.example.mytv.application.port.out.LoadChannelPort;
 import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveChannelPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
-import com.example.mytv.domain.Video;
+import com.example.mytv.application.port.out.VideoLikePort;
+import com.example.mytv.domain.video.Video;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -16,12 +17,14 @@ import org.springframework.stereotype.Service;
 public class VideoService implements VideoUseCase {
     private final LoadVideoPort loadVideoPort;
     private final SaveVideoPort saveVideoPort;
+    private final VideoLikePort videoLikePort;
     private final LoadChannelPort loadChannelPort;
     private final SaveChannelPort saveChannelPort;
 
-    public VideoService(LoadVideoPort loadVideoPort, SaveVideoPort saveVideoPort, LoadChannelPort loadChannelPort, SaveChannelPort saveChannelPort) {
+    public VideoService(LoadVideoPort loadVideoPort, SaveVideoPort saveVideoPort, VideoLikePort videoLikePort, LoadChannelPort loadChannelPort, SaveChannelPort saveChannelPort) {
         this.loadVideoPort = loadVideoPort;
         this.saveVideoPort = saveVideoPort;
+        this.videoLikePort = videoLikePort;
         this.loadChannelPort = loadChannelPort;
         this.saveChannelPort = saveChannelPort;
     }
@@ -30,7 +33,8 @@ public class VideoService implements VideoUseCase {
     public Video getVideo(String videoId) {
         var video = loadVideoPort.loadVideo(videoId);
         var viewCount = loadVideoPort.getViewCount(videoId);
-        video.bindViewCount(viewCount);
+        var likeCount = videoLikePort.getVideoLikeCount(videoId);
+        video.bindCount(viewCount, likeCount);
 
         return video;
     }
@@ -40,7 +44,8 @@ public class VideoService implements VideoUseCase {
         return loadVideoPort.loadVideoByChannel(channelId).stream()
             .map(video -> {
                 var viewCount = loadVideoPort.getViewCount(video.getId());
-                video.bindViewCount(viewCount);
+                var likeCount = videoLikePort.getVideoLikeCount(video.getId());
+                video.bindCount(viewCount, likeCount);
                 return video;
             })
             .toList();

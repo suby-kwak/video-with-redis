@@ -1,6 +1,6 @@
 package com.example.mytv.adapter.out.jpa.video;
 
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -8,7 +8,7 @@ import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

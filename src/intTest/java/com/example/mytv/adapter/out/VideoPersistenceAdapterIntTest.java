@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.config.TestRedisConfig;
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import com.example.mytv.util.RedisKeyGenerator;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;

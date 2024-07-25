@@ -1,4 +1,4 @@
-package com.example.mytv.domain;
+package com.example.mytv.domain.video;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,9 +21,11 @@ public class Video implements Serializable {
     private String fileUrl;
     private String channelId;
     private Long viewCount;
+    private Long likeCount;
     private LocalDateTime publishedAt;
 
-    public void bindViewCount(long viewCount) {
+    public void bindCount(long viewCount, Long likeCount) {
         this.viewCount = viewCount;
+        this.likeCount = likeCount;
     }
 }

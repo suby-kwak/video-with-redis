@@ -2,6 +2,7 @@ package com.example.mytv.adapter.out;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -44,5 +45,25 @@ class VideoLikePersistenceAdapterTest {
 
         then(result).isEqualTo(4L);
         verify(setOperations).remove(RedisKeyGenerator.getVideoLikeKey("videoId"), "userId");
+    }
+
+    @Test
+    void testIsVideoLikeMember() {
+        given(setOperations.isMember(any(), anyString())).willReturn(true);
+
+        var result = sut.isVideoLikeMember("videoId", "userId");
+
+        then(result).isTrue();
+        verify(setOperations).isMember(RedisKeyGenerator.getVideoLikeKey("videoId"), "userId");
+    }
+
+    @Test
+    void testCountVideoLike() {
+        given(setOperations.size(any())).willReturn(10L);
+
+        var result = sut.getVideoLikeCount("videoId");
+
+        then(result).isEqualTo(10L);
+        verify(setOperations).size(RedisKeyGenerator.getVideoLikeKey("videoId"));
     }
 }

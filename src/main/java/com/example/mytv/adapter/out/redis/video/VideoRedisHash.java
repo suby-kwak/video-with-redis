@@ -1,8 +1,7 @@
 package com.example.mytv.adapter.out.redis.video;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
-import com.example.mytv.adapter.out.redis.channel.ChannelRedisHash;
-import com.example.mytv.domain.Video;
+import com.example.mytv.domain.video.Video;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
