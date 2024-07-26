@@ -4,6 +4,7 @@ import com.example.mytv.adapter.in.api.HeaderAttribute;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
 import com.example.mytv.domain.user.User;
+import com.example.mytv.exception.UnauthorizedException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -37,6 +38,7 @@ public class UserHandlerMethodArgumentResolver implements HandlerMethodArgumentR
         }
         var userId = userSessionPort.getUserId(authKey);
         if (userId == null) {
+            // throw new UnauthorizedException();
             return null;
         }
         return loadUserPort.loadUser(userId).orElse(null);
