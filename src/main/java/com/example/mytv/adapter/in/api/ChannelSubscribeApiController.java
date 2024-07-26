@@ -3,7 +3,7 @@ package com.example.mytv.adapter.in.api;
 import com.example.mytv.adapter.in.api.dto.CommandResponse;
 import com.example.mytv.application.port.in.SubscribeUseCase;
 import com.example.mytv.application.port.in.UserUserCase;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.channel.Channel;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;

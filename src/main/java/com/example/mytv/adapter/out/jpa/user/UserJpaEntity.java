@@ -1,13 +1,15 @@
 package com.example.mytv.adapter.out.jpa.user;
 
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

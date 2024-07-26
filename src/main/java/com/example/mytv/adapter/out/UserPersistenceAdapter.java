@@ -3,7 +3,7 @@ package com.example.mytv.adapter.out;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
 import com.example.mytv.application.port.out.LoadUserPort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 

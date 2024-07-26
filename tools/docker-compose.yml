@@ -11,13 +11,11 @@ services:
       - MYSQL_DATABASE=mytv
       - MYSQL_USER=local
       - MYSQL_PASSWORD=local
-    restart: always
   redis:
     image: redis:7.2.5
     container_name: mytv-redis
     ports:
       - '6379:6379'
-    restart: always
   mongodb:
     image: mongo:6.0.16
     container_name: mytv-mongodb
@@ -29,4 +27,3 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=local
       - MONGO_INITDB_ROOT_PASSWORD=local
       - MONGO_INITDB_DATABASE=mytv
-    restart: always

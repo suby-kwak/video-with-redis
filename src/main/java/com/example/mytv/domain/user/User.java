@@ -1,4 +1,4 @@
-package com.example.mytv.domain;
+package com.example.mytv.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

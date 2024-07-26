@@ -7,7 +7,7 @@ import com.example.mytv.adapter.out.jpa.subscribe.SubscribeJpaEntity;
 import com.example.mytv.adapter.out.jpa.subscribe.SubscribeJpaRepository;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.application.port.out.SubscribePort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.channel.Channel;
 import java.util.List;
 import java.util.UUID;

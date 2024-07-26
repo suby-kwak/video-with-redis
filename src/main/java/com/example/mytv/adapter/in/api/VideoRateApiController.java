@@ -2,7 +2,7 @@ package com.example.mytv.adapter.in.api;
 
 import com.example.mytv.adapter.in.api.dto.VideoRateResponse;
 import com.example.mytv.application.port.in.VideoLikeUseCase;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.video.VideoRate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
