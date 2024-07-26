@@ -43,9 +43,11 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'it.ozimov:embedded-redis:0.7.2'
     testRuntimeOnly 'com.h2database:h2'
-    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.15.0'
+    testImplementation 'com.github.codemonstur:embedded-redis:1.4.3'
+    intTestImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:4.16.1'
+
+
 }
 
 test {

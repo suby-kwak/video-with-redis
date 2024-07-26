@@ -1,15 +1,17 @@
 package com.example.mytv.adapter.in;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.assertj.core.api.BDDAssertions.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.mytv.adapter.in.api.HeaderAttribute;
+import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
+import com.example.mytv.adapter.out.mongo.CommentMongoRepository;
 import com.example.mytv.config.TestRedisConfig;
 import com.example.mytv.util.RedisKeyGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,18 +19,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(classes = TestRedisConfig.class)
 @AutoConfigureMockMvc
-public class UserApiControllerIntTest {
+public class CommentApiControllerIntTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
     private UserJpaRepository userJpaRepository;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private CommentMongoRepository commentMongoRepository;
 
     private String authKey = UUID.randomUUID().toString();
 
@@ -39,30 +46,20 @@ public class UserApiControllerIntTest {
     }
 
     @Test
-    void testGetUserWithHeader() throws Exception{
+    void testCreateComment() throws Exception{
         mockMvc
             .perform(
-                get("/api/v1/users")
+                post("/api/v1/comments")
                     .header(HeaderAttribute.X_AUTH_KEY, authKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(
+                        new CommentRequest("channelId", "videoId", "댓글")
+                    ))
             )
-            .andDo(print())
             .andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").value("userId"),
-                jsonPath("$.name").value("user name")
+                status().isOk()
             );
-    }
 
-    @Test
-    void testGetUserWithoutHeader() throws Exception{
-        mockMvc
-            .perform(
-                get("/api/v1/users")
-            )
-            .andDo(print())
-            .andExpectAll(
-                status().isOk(),
-                jsonPath("$.id").doesNotExist()
-            );
+        then(commentMongoRepository.count()).isEqualTo(1);
     }
 }

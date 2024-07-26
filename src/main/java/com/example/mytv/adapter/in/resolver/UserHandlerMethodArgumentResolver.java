@@ -1,10 +1,11 @@
 package com.example.mytv.adapter.in.resolver;
 
-import com.example.mytv.adapter.in.api.constant.HeaderAttribute;
+import com.example.mytv.adapter.in.api.HeaderAttribute;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
 import com.example.mytv.domain.user.User;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -17,6 +18,7 @@ public class UserHandlerMethodArgumentResolver implements HandlerMethodArgumentR
     private UserSessionPort userSessionPort;
     private LoadUserPort loadUserPort;
 
+    // @Autowired(required = false) 와 동일 효과
     public UserHandlerMethodArgumentResolver(Optional<UserSessionPort> userSessionPort, Optional<LoadUserPort> loadUserPort) {
         userSessionPort.ifPresent(port -> this.userSessionPort = port);
         loadUserPort.ifPresent(port -> this.loadUserPort = port);
