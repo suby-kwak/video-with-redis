@@ -5,10 +5,9 @@ import static org.mockito.BDDMockito.given;
 
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.user.UserFixtures;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class AuthBaseControllerTest {

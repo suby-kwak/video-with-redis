@@ -1,6 +1,6 @@
 package com.example.mytv.adapter.out.redis.user;
 
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;

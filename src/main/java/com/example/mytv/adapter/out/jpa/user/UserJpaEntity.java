@@ -1,6 +1,6 @@
 package com.example.mytv.adapter.out.jpa.user;
 
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

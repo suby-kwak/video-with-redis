@@ -3,7 +3,7 @@ package com.example.mytv.adapter.in.resolver;
 import com.example.mytv.adapter.in.api.constant.HeaderAttribute;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import java.util.Optional;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

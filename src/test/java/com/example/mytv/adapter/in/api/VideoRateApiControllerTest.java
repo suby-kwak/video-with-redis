@@ -13,7 +13,7 @@ import com.example.mytv.adapter.in.api.constant.HeaderAttribute;
 import com.example.mytv.application.port.in.VideoLikeUseCase;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.user.UserFixtures;
 import java.util.Optional;
 import java.util.UUID;

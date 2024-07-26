@@ -2,7 +2,7 @@ package com.example.mytv.application;
 
 import com.example.mytv.application.port.in.UserUserCase;
 import com.example.mytv.application.port.out.LoadUserPort;
-import com.example.mytv.domain.User;
+import com.example.mytv.domain.user.User;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
