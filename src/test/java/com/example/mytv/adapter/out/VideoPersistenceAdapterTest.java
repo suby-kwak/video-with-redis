@@ -29,12 +29,13 @@ class VideoPersistenceAdapterTest {
     private VideoPersistenceAdapter sut;
 
     private final VideoJpaRepository videoJpaRepository = mock(VideoJpaRepository.class);
-    private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class, Mockito.RETURNS_DEEP_STUBS);
+    private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class);
     private final ValueOperations<String, Long> valueOperations = mock(ValueOperations.class);
 
     @BeforeEach
     void setUp() {
         sut = new VideoPersistenceAdapter(videoJpaRepository, redisTemplate);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
     }
 
     @Nested
@@ -108,7 +109,6 @@ class VideoPersistenceAdapterTest {
 
     @Test
     void testIncrementViewCount() {
-        given(redisTemplate.opsForValue()).willReturn(valueOperations);
         given(valueOperations.increment(any())).willReturn(5L);
 
         sut.incrementViewCount("video1");
@@ -123,5 +123,14 @@ class VideoPersistenceAdapterTest {
         var result = sut.getViewCount("video1");
 
         then(result).isEqualTo(10L);
+    }
+
+    @Test
+    void testGetViewCountWhenNullValueThenZero() {
+        given(redisTemplate.opsForValue().get(any())).willReturn(null);
+
+        var result = sut.getViewCount("video1");
+
+        then(result).isEqualTo(0L);
     }
 }
