@@ -1,6 +1,8 @@
 package com.example.mytv.adapter.out;
 
 import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
+import static com.example.mytv.util.RedisKeyGenerator.getSubscribeChannelKey;
+import static com.example.mytv.util.RedisKeyGenerator.getSubscribeUserKey;
 
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.mytv.adapter.out.jpa.subscribe.SubscribeJpaEntity;
@@ -38,8 +40,8 @@ public class SubscribePersistenceAdapter implements SubscribePort {
 
         // redis
         var setOps = stringRedisTemplate.opsForSet();
-        setOps.add("subscribe:channel:" + channel.getId(), user.getId());
-        setOps.add("subscribe:user:" + user.getId(), channel.getId());
+        setOps.add(getSubscribeChannelKey(channel.getId()), user.getId());
+        setOps.add(getSubscribeUserKey(user.getId()), channel.getId());
 
         return subscribeJpaEntity.getId();
     }
@@ -50,8 +52,8 @@ public class SubscribePersistenceAdapter implements SubscribePort {
         var subscribeJpaEntity = subscribeJpaRepository.findById(subscribeId).get();
         var channelId = subscribeJpaEntity.getChannel().getId();
         var setOps = stringRedisTemplate.opsForSet();
-        setOps.remove("subscribe:channel:" + channelId, userId);
-        setOps.remove("subscribe:user:" + userId, channelId);
+        setOps.remove(getSubscribeChannelKey(channelId), userId);
+        setOps.remove(getSubscribeUserKey(userId), channelId);
 
         subscribeJpaRepository.deleteById(subscribeId);
     }

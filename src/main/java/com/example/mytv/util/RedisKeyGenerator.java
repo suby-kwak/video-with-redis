@@ -1,7 +1,7 @@
 package com.example.mytv.util;
 
 import static com.example.mytv.util.CacheNames.SEPARATOR;
-import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL;
+import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
 import static com.example.mytv.util.CacheNames.SUBSCRIBE_USER;
 import static com.example.mytv.util.CacheNames.USER_SESSION;
 import static com.example.mytv.util.CacheNames.VIDEO_LIKE;
@@ -13,7 +13,7 @@ public class RedisKeyGenerator {
     }
 
     public static String getSubscribeChannelKey(String channelId) {
-        return SUBSCRIBE_CHANNEL + SEPARATOR + channelId;
+        return SUBSCRIBE_CHANNEL_BY_USER + SEPARATOR + channelId;
     }
 
     public static String getSubscribeUserKey(String userId) {

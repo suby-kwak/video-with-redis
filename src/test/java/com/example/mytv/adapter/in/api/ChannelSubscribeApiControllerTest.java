@@ -61,7 +61,8 @@ class ChannelSubscribeApiControllerTest extends AuthBaseControllerTest {
 
         mockMvc
             .perform(
-                get("/api/v1/subscribe?userId={userId}", "userId")
+                get("/api/v1/subscribe/mine")
+                    .header(HeaderAttribute.X_AUTH_KEY, UUID.randomUUID().toString())
             )
             .andExpectAll(
                 status().isOk(),

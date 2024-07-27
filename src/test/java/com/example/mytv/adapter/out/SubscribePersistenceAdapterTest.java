@@ -15,15 +15,21 @@ import com.example.mytv.domain.user.UserFixtures;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 class SubscribePersistenceAdapterTest {
     private SubscribePersistenceAdapter sut;
 
     private SubscribeJpaRepository subscribeJpaRepository = mock(SubscribeJpaRepository.class);
+    private StringRedisTemplate stringRedisTemplate = mock(StringRedisTemplate.class);
+    private SetOperations<String, String> setOperations = mock(SetOperations.class);
 
     @BeforeEach
     void setUp() {
-        sut = new SubscribePersistenceAdapter(subscribeJpaRepository);
+        sut = new SubscribePersistenceAdapter(subscribeJpaRepository, stringRedisTemplate);
+
+        given(stringRedisTemplate.opsForSet()).willReturn(setOperations);
     }
 
     @Test
