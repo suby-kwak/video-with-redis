@@ -24,7 +24,7 @@ class UserPersistenceAdapterTest {
     @Test
     void loadUser() {
         // Given
-        var userJpaEntity = new UserJpaEntity("userId", "name");
+        var userJpaEntity = new UserJpaEntity("userId", "name", "https://example.com/profile.jpg");
         given(userJpaRepository.findById(any())).willReturn(Optional.of(userJpaEntity));
 
         // When

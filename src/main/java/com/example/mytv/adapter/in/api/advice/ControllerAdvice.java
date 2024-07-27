@@ -4,6 +4,7 @@ import com.example.mytv.adapter.in.api.dto.ErrorResponse;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
+import com.example.mytv.exception.UnauthorizedException;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,15 @@ public class ControllerAdvice {
             .build();
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleUnauthorized(Exception ex) {
+        return ErrorResponse.builder()
+            .type("unauthorized")
+            .detail(ex.getMessage())
+            .timestamp(LocalDateTime.now())
+            .build();
+    }
     @ExceptionHandler(ForbiddenRequestException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbidden(Exception ex) {

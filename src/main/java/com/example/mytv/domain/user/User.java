@@ -10,4 +10,5 @@ import lombok.Getter;
 public class User {
     private String id;
     private String name;
+    private String profileImageUrl;
 }

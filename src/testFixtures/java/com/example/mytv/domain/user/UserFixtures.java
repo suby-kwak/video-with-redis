@@ -5,6 +5,7 @@ public class UserFixtures {
         return User.builder()
             .id("userId")
             .name("name")
+            .profileImageUrl("https://example.com/profile.jpg")
             .build();
     }
 
@@ -12,6 +13,7 @@ public class UserFixtures {
         return User.builder()
             .id(id)
             .name("name" + id)
+            .profileImageUrl("https://example.com/profile.jpg")
             .build();
     }
 }

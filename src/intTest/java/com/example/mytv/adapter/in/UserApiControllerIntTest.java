@@ -34,7 +34,7 @@ public class UserApiControllerIntTest {
 
     @BeforeEach
     void setUp() {
-        userJpaRepository.save(new UserJpaEntity("userId", "user name"));
+        userJpaRepository.save(new UserJpaEntity("userId", "user name", "https://exmaple.com/profile.jpg"));
         stringRedisTemplate.opsForValue().set(RedisKeyGenerator.getUserSessionKey(authKey), "userId");
     }
 
@@ -63,6 +63,20 @@ public class UserApiControllerIntTest {
             .andExpectAll(
                 status().isOk(),
                 jsonPath("$.id").doesNotExist()
+            );
+    }
+
+    @Test
+    void testGetUserWithNotAuthKeyThen401Unauthorized() throws Exception{
+        // UserHandlerMethodArgumentResolver 변경
+        mockMvc
+            .perform(
+                get("/api/v1/users")
+                    .header(HeaderAttribute.X_AUTH_KEY, "noauth")
+            )
+            .andDo(print())
+            .andExpectAll(
+                status().isUnauthorized()
             );
     }
 }

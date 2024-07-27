@@ -19,14 +19,17 @@ public class UserJpaEntity {
 
     private String name;
 
+    private String profileImageUrl;
+
     public static UserJpaEntity from(User user) {
-        return new UserJpaEntity(user.getId(), user.getName());
+        return new UserJpaEntity(user.getId(), user.getName(), user.getProfileImageUrl());
     }
 
     public User toDomain() {
         return User.builder()
             .id(this.getId())
             .name(this.getName())
+            .profileImageUrl(this.getProfileImageUrl())
             .build();
     }
 }
