@@ -10,7 +10,6 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Builder
 public class Video implements Serializable {

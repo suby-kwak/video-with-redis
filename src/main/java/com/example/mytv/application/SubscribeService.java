@@ -30,7 +30,7 @@ public class SubscribeService implements SubscribeUseCase {
 
     @Override
     public void unsubscribeChannel(String subscribeId, String userId) {
-        subscribePort.deleteSubscribeChannel(subscribeId, userId);
+        subscribePort.deleteSubscribeChannel(subscribeId);
     }
 
     @Override

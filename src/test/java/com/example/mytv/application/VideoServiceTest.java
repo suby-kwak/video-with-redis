@@ -1,6 +1,7 @@
 package com.example.mytv.application;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -64,6 +65,7 @@ class VideoServiceTest {
             .toList();
         given(loadVideoPort.loadVideoByChannel(any())).willReturn(list);
         given(loadVideoPort.getViewCount(any())).willReturn(100L, 150L, 200L);
+        given(videoLikePort.getVideoLikeCount(any())).willReturn(11L, 12L, 20L);
         // When
         var result = sut.listVideos(channelId);
         // Then
@@ -71,7 +73,8 @@ class VideoServiceTest {
             .hasSize(3)
             .extracting("channelId").containsOnly(channelId);
         then(result)
-            .extracting("viewCount").contains(100L, 150L, 200L);
+            .extracting("viewCount", "likeCount")
+            .contains(tuple(100L, 11L), tuple(150L, 12L), tuple(200L, 20L));
     }
 
     @Test

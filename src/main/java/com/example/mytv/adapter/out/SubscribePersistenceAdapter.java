@@ -48,9 +48,11 @@ public class SubscribePersistenceAdapter implements SubscribePort {
 
     @Override
     @CacheEvict(cacheManager = "redisTtl10mCacheManager", cacheNames = SUBSCRIBE_CHANNEL_BY_USER, key = "#userId")
-    public void deleteSubscribeChannel(String subscribeId, String userId) {
+    public void deleteSubscribeChannel(String subscribeId) {
         var subscribeJpaEntity = subscribeJpaRepository.findById(subscribeId).get();
         var channelId = subscribeJpaEntity.getChannel().getId();
+        var userId = subscribeJpaEntity.getUser().getId();
+
         var setOps = stringRedisTemplate.opsForSet();
         setOps.remove(getSubscribeChannelKey(channelId), userId);
         setOps.remove(getSubscribeUserKey(userId), channelId);

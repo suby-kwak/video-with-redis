@@ -12,6 +12,7 @@ import com.example.mytv.adapter.out.jpa.subscribe.SubscribeJpaRepository;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.domain.channel.ChannelFixtures;
 import com.example.mytv.domain.user.UserFixtures;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,19 @@ class SubscribePersistenceAdapterTest {
 
         then(result).isNotNull();
         verify(subscribeJpaRepository).save(any());
+    }
+
+    @Test
+    void testDeleteSubscribe() {
+        var subscribeId = "subscribedId";
+        var channel = ChannelFixtures.stub("channelId");
+        var user = UserFixtures.stub();
+        given(subscribeJpaRepository.findById(any()))
+            .willReturn(Optional.of(new SubscribeJpaEntity(subscribeId, ChannelJpaEntity.from(channel), UserJpaEntity.from(user))));
+
+        sut.deleteSubscribeChannel(subscribeId);
+
+        verify(subscribeJpaRepository).deleteById(any());
     }
 
     @Test
