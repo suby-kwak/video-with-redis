@@ -35,7 +35,7 @@ public class ChannelApiControllerIntTest {
     @DisplayName("POST /api/v1/channels")
     void testPostChannel() throws Exception {
         // Given
-        userJpaRepository.save(new UserJpaEntity("user", "user"));
+        userJpaRepository.save(new UserJpaEntity("user", "user", "https://exmaple.com/profile.jpg"));
         var body = new ChannelRequest(new ChannelSnippetRequest("channel", "desc", "https://exmaple.com/image.jpg"), "user");
 
         // When

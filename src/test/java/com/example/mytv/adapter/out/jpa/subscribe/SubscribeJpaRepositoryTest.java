@@ -26,7 +26,7 @@ class SubscribeJpaRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        var user = entityManager.persist(new UserJpaEntity("userId", "name"));
+        var user = entityManager.persist(new UserJpaEntity("userId", "name", "https://example.com/profile.jpg"));
         for (int i = 0; i < 3; i++) {
             var channel = entityManager.persist(ChannelJpaEntity.from(ChannelFixtures.stub("channel" + i)));
             entityManager.persist(new SubscribeJpaEntity(UUID.randomUUID().toString(), channel, user));

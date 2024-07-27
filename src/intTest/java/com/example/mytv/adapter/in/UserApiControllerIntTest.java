@@ -34,7 +34,7 @@ public class UserApiControllerIntTest {
 
     @BeforeEach
     void setUp() {
-        userJpaRepository.save(new UserJpaEntity("userId", "user name"));
+        userJpaRepository.save(new UserJpaEntity("userId", "user name", "https://exmaple.com/profile.jpg"));
         stringRedisTemplate.opsForValue().set(RedisKeyGenerator.getUserSessionKey(authKey), "userId");
     }
 
