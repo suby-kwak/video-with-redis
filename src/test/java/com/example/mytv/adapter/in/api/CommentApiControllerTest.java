@@ -3,6 +3,9 @@ package com.example.mytv.adapter.in.api;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -175,6 +178,27 @@ class CommentApiControllerTest {
                     status().isForbidden(),
                     jsonPath("$.type").value("forbidden")
                 );
+        }
+    }
+
+    @Nested
+    @DisplayName("DELETE /api/v1/comments/{commentId}")
+    class DeleteComment {
+        @Test
+        @DisplayName("200 Ok, 해당 댓글을 삭제")
+        void existThenDeleteComment() throws Exception {
+            var commentId = "commentId";
+
+            mockMvc
+                .perform(
+                    delete("/api/v1/comments/{commentId}", commentId)
+                        .header(HeaderAttribute.X_AUTH_KEY, authKey)
+                )
+                .andExpect(
+                    status().isOk()
+                );
+
+            verify(commentUseCase).deleteComment(commentId, user);
         }
     }
 }

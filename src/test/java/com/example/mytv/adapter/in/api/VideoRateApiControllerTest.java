@@ -20,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -86,10 +88,11 @@ class VideoRateApiControllerTest {
     @Nested
     @DisplayName("GET /api/v1/rate")
     class GetVideoRate {
-        @Test
+        @ParameterizedTest
+        @CsvSource(value = {"true,like", "false,none"})
         @DisplayName("좋아요한 비디오는 rate=like 를 반환")
-        void testGetVideoLikeRate() throws Exception {
-            given(videoLikeUseCase.isLikedVideo(any(), any())).willReturn(true);
+        void testGetVideoLikeRate(Boolean likedVideo, String rate) throws Exception {
+            given(videoLikeUseCase.isLikedVideo(any(), any())).willReturn(likedVideo);
 
             mockMvc
                 .perform(
@@ -99,7 +102,7 @@ class VideoRateApiControllerTest {
                 .andExpectAll(
                     status().isOk(),
                     jsonPath("$.videoId").value("videoId"),
-                    jsonPath("$.rate").value("like")
+                    jsonPath("$.rate").value(rate)
                 );
         }
     }

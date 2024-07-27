@@ -52,6 +52,18 @@ public class CommentService implements CommentUseCase {
         return commentPort.saveComment(comment);
     }
 
+    @Override
+    public void deleteComment(String commentId, User user) {
+        var comment = commentPort.loadComment(commentId)
+            .orElseThrow(() -> new DomainNotFoundException("Comment Not Found."));
+
+        if (!Objects.equals(comment.getAuthorId(), user.getId())) {
+            throw new ForbiddenRequestException("The request might not be properly authorized.");
+        }
+
+        commentPort.deleteComment(commentId);
+    }
+
     private boolean equalMetaData(Comment comment, CommentRequest commentRequest) {
         return Objects.equals(comment.getChannelId(), commentRequest.getChannelId()) &&
             Objects.equals(comment.getVideoId(), commentRequest.getVideoId());

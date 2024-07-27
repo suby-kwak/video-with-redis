@@ -1,8 +1,7 @@
 package com.example.mytv.application.port.out;
 
-import com.example.mytv.domain.channel.Subscribe;
-import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.channel.Channel;
+import com.example.mytv.domain.user.User;
 import java.util.List;
 
 public interface SubscribePort {

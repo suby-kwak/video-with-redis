@@ -33,6 +33,7 @@ class CommentServiceTest {
     }
 
     @Test
+    @DisplayName("댓글 생성")
     void testCreateComment() {
         // given
         var user = UserFixtures.stub();
@@ -100,6 +101,45 @@ class CommentServiceTest {
             given(commentPort.loadComment(any())).willReturn(Optional.empty());
 
             thenThrownBy(() -> sut.updateComment(commentId, user, commentRequest))
+                .isInstanceOf(DomainNotFoundException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 삭제")
+    class DeleteComment {
+        @Test
+        @DisplayName("댓글을 삭제")
+        void givenCommentIdThenDeleteComment() {
+            var commentId = "commentId";
+            var user = UserFixtures.stub();
+            var comment = CommentFixtures.stub(commentId);
+            given(commentPort.loadComment(any())).willReturn(Optional.of(comment));
+
+            sut.deleteComment(commentId, user);
+
+            verify(commentPort).deleteComment(commentId);
+        }
+
+        @Test
+        @DisplayName("댓글 삭제 user와 댓글 author 가 다르면 ForbiddenRequestException throw")
+        void givenOtherUserThrowForbiddenRequestException() {
+            var commentId = "commentId";
+            var otherUser = UserFixtures.stub("otherUser");
+            given(commentPort.loadComment(any())).willReturn(Optional.of(CommentFixtures.stub(commentId)));
+
+            thenThrownBy(() -> sut.deleteComment(commentId, otherUser))
+                .isInstanceOf(ForbiddenRequestException.class);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 댓글이면 DomainNotFoundException throw")
+        void givenNoCommentThenDomainNotFoundException() {
+            var commentId = "commentId";
+            var user = UserFixtures.stub();
+            given(commentPort.loadComment(any())).willReturn(Optional.empty());
+
+            thenThrownBy(() -> sut.deleteComment(commentId, user))
                 .isInstanceOf(DomainNotFoundException.class);
         }
     }
