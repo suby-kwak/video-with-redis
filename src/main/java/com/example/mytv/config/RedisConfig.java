@@ -41,6 +41,22 @@ public class RedisConfig {
             .build();
     }
 
+    @Bean
+    @Primary
+    public RedisCacheManager redisTtl10mCacheManager(RedisConnectionFactory redisConnectionFactory) {
+        return RedisCacheManager.builder(redisConnectionFactory)
+            .cacheDefaults(ttl10mCacheConfiguration())
+            .build();
+    }
+
+    private RedisCacheConfiguration ttl10mCacheConfiguration() {
+        return RedisCacheConfiguration
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(10L))
+            .disableCachingNullValues();
+    }
+
+
     private RedisCacheConfiguration defaultCacheConfiguration() {
         return RedisCacheConfiguration
             .defaultCacheConfig()

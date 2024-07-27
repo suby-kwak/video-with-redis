@@ -6,6 +6,7 @@ import com.example.mytv.application.port.in.UserUserCase;
 import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.channel.Channel;
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class ChannelSubscribeApiController {
     }
 
     @PostMapping
-    CommandResponse insertSubscribe(
+    CommandResponse subscribe(
         User user,
         @RequestParam String channelId
     ) {
@@ -32,9 +33,17 @@ public class ChannelSubscribeApiController {
         return new CommandResponse(subscribeId);
     }
 
-    @GetMapping(params = "userId")
-    List<Channel> listSubscribeChannelByUser(@RequestParam String userId) {
-        var user = userUserCase.getUser(userId);
+    @DeleteMapping
+    void unsubscribe(
+        User user,
+        @RequestParam String subscribeId
+    ) {
+        subscribeUseCase.unsubscribeChannel(subscribeId, user.getId());
+    }
+
+    @GetMapping("/mine")
+    List<Channel> listSubscribeChannelByUser(User user) {
+        //var user = userUserCase.getUser(userId);
         return subscribeUseCase.listSubscribeChannel(user.getId());
     }
 }

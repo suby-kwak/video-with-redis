@@ -10,7 +10,7 @@ public class CacheNames {
     public static final String VIDEO_LIST = VIDEO + SEPARATOR + "list";
     public static final String VIDEO_VIEW_COUNT = VIDEO + SEPARATOR + "view-count";
     public static final String VIDEO_LIKE = VIDEO + SEPARATOR + "like";
-    public static final String SUBSCRIBE_CHANNEL = SUBSCRIBE + SEPARATOR + "channel";
+    public static final String SUBSCRIBE_CHANNEL_BY_USER = SUBSCRIBE + SEPARATOR + "channel-by-user";
     public static final String SUBSCRIBE_USER = SUBSCRIBE + SEPARATOR + "user";
 
 }

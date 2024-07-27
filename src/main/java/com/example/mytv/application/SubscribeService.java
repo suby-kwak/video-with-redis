@@ -29,6 +29,11 @@ public class SubscribeService implements SubscribeUseCase {
     }
 
     @Override
+    public void unsubscribeChannel(String subscribeId, String userId) {
+        subscribePort.deleteSubscribeChannel(subscribeId, userId);
+    }
+
+    @Override
     public List<Channel> listSubscribeChannel(String userId) {
         return subscribePort.listSubscribeChannel(userId);
     }

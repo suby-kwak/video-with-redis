@@ -38,8 +38,7 @@ public class UserHandlerMethodArgumentResolver implements HandlerMethodArgumentR
         }
         var userId = userSessionPort.getUserId(authKey);
         if (userId == null) {
-            // throw new UnauthorizedException();
-            return null;
+            throw new UnauthorizedException();
         }
         return loadUserPort.loadUser(userId).orElse(null);
     }

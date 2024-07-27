@@ -15,6 +15,7 @@ public class UserSessionPersistenceAdapter implements UserSessionPort {
 
     @Override
     public String getUserId(String authKey) {
+        var valOperations = stringRedisTemplate.opsForValue();
         return stringRedisTemplate.opsForValue().get(RedisKeyGenerator.getUserSessionKey(authKey));
     }
 }
