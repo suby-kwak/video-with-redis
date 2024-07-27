@@ -24,7 +24,13 @@ public class CommentPersistenceAdapter implements CommentPort {
     }
 
     @Override
+    public void deleteComment(String commentId) {
+        commentMongoRepository.deleteById(commentId);
+    }
+
+    @Override
     public Optional<Comment> loadComment(String commentId) {
-        return Optional.empty();
+        return commentMongoRepository.findById(commentId)
+            .map(CommentDocument::toDomain);
     }
 }

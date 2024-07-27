@@ -4,11 +4,9 @@ import com.example.mytv.adapter.in.api.dto.ChannelSnippetRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
-@ToString
 @Builder
 public class Channel {
     private String id;
