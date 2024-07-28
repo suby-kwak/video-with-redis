@@ -11,4 +11,12 @@ public class User {
     private String id;
     private String name;
     private String profileImageUrl;
+
+    public static User defaultUser(String id) {
+        return User.builder()
+            .id(id)
+            .name("")
+            .profileImageUrl("")
+            .build();
+    }
 }

@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,12 +18,14 @@ import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
 import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
+import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.user.UserFixtures;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -186,7 +189,7 @@ class CommentApiControllerTest {
     class DeleteComment {
         @Test
         @DisplayName("200 Ok, 해당 댓글을 삭제")
-        void existThenDeleteComment() throws Exception {
+        void testGivenCommentThenDeleteComment() throws Exception {
             var commentId = "commentId";
 
             mockMvc
@@ -199,6 +202,58 @@ class CommentApiControllerTest {
                 );
 
             verify(commentUseCase).deleteComment(commentId, user);
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/v1/comments/{commentId}")
+    class GetComment {
+        @Test
+        @DisplayName("200 Ok, 해당 댓글 반환")
+        void whenExistThenReturnComment() throws Exception {
+            var commentId = "commentId";
+            var commentResponse = CommentResponse.builder()
+                .id(commentId)
+                .channelId("channelId")
+                .videoId("videoId")
+                .text("comment")
+                .publishedAt(LocalDateTime.now())
+                .authorId("user")
+                .authorName("user name")
+                .authorProfileImageUrl("https://example.com/profile.jpg")
+                .likeCount(100L)
+                .build();
+            given(commentUseCase.getComment(any())).willReturn(commentResponse);
+
+            mockMvc
+                .perform(
+                    get("/api/v1/comments/{commentId}", commentId)
+                )
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.id").value(commentId),
+                    jsonPath("$.videoId").value("videoId"),
+                    jsonPath("$.text").value("comment"),
+                    jsonPath("$.authorId").value("user"),
+                    jsonPath("$.authorName").value("user name"),
+                    jsonPath("$.authorProfileImageUrl").value("https://example.com/profile.jpg"),
+                    jsonPath("$.likeCount").value(100L)
+                );
+        }
+
+        @Test
+        @DisplayName("해당 댓글이 없으면 400 Not Found")
+        void testGivenCommentNotExistThenNotFound() throws Exception{
+            var commentId = "commentId";
+            given(commentUseCase.getComment(any())).willThrow(new DomainNotFoundException(""));
+
+            mockMvc
+                .perform(
+                    get("/api/v1/comments/{commentId}", commentId)
+                )
+                .andExpect(
+                    status().isNotFound()
+                );
         }
     }
 }

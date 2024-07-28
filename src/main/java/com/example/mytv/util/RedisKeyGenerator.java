@@ -1,5 +1,6 @@
 package com.example.mytv.util;
 
+import static com.example.mytv.util.CacheNames.COMMENT_LIKE;
 import static com.example.mytv.util.CacheNames.SEPARATOR;
 import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
 import static com.example.mytv.util.CacheNames.SUBSCRIBE_USER;
@@ -26,5 +27,9 @@ public class RedisKeyGenerator {
 
     public static String getVideoLikeKey(String videoId) {
         return VIDEO_LIKE + SEPARATOR +  videoId;
+    }
+
+    public static String getCommentLikeKey(String commentId) {
+        return COMMENT_LIKE + SEPARATOR + commentId;
     }
 }

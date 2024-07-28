@@ -2,6 +2,7 @@ package com.example.mytv.application.port.in;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.domain.comment.Comment;
+import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
 
 public interface CommentUseCase {
@@ -10,4 +11,6 @@ public interface CommentUseCase {
     Comment updateComment(String commentId, User user, CommentRequest commentRequest);
 
     void deleteComment(String commentId, User user);
+
+    CommentResponse getComment(String commentId);
 }
