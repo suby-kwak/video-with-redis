@@ -21,4 +21,5 @@
 `redis-cli`
 
 ### MongoDB
-`docker exec -it mytv-mongodb mongosh -u local -p local`
+`docker exec -it mytv-mongodb sh` \
+`mongosh -u local -p local`
