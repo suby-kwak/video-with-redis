@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
+import com.example.mytv.application.CommentService;
 import com.example.mytv.application.port.out.CommentLikePort;
 import com.example.mytv.application.port.out.CommentPort;
 import com.example.mytv.application.port.out.LoadUserPort;

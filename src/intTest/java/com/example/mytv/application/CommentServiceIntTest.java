@@ -9,7 +9,6 @@ import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
 import com.example.mytv.adapter.out.mongo.CommentDocument;
 import com.example.mytv.adapter.out.redis.user.UserRedisHash;
 import com.example.mytv.adapter.out.redis.user.UserRedisRepository;
-import com.example.mytv.application.port.CommentService;
 import com.example.mytv.config.TestRedisConfig;
 import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
