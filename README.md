@@ -23,3 +23,8 @@
 ### MongoDB
 `docker exec -it mytv-mongodb sh` \
 `mongosh -u local -p local`
+
+
+## 참고
+- Redis Command : https://redis.io/docs/latest/commands/
+- Spring Data RedisTemplate 지원 Redis Command : https://docs.spring.io/spring-data/redis/reference/appendix.html
