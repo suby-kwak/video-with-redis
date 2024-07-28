@@ -8,9 +8,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
+import com.example.mytv.application.port.out.CommentLikePort;
 import com.example.mytv.application.port.out.CommentPort;
+import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
+import com.example.mytv.domain.user.User;
 import com.example.mytv.domain.user.UserFixtures;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
@@ -26,10 +29,12 @@ class CommentServiceTest {
     private CommentService sut;
 
     private final CommentPort commentPort = mock(CommentPort.class);
+    private final LoadUserPort loadUserPort = mock(LoadUserPort.class);
+    private final CommentLikePort commentLikePort = mock(CommentLikePort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new CommentService(commentPort);
+        sut = new CommentService(commentPort, loadUserPort, commentLikePort);
     }
 
     @Test
@@ -141,6 +146,31 @@ class CommentServiceTest {
 
             thenThrownBy(() -> sut.deleteComment(commentId, user))
                 .isInstanceOf(DomainNotFoundException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 한개 조회")
+    class GetComment {
+        @Test
+        void givenCommentThenReturnComment() {
+            var comment = CommentFixtures.stub("commentId");
+            var author = User.builder().id(comment.getAuthorId()).name("author").profileImageUrl("https://example.com/profile.jpg").build();
+            given(commentPort.loadComment(any())).willReturn(Optional.of(comment));
+            given(loadUserPort.loadUser(any())).willReturn(Optional.of(author));
+            given(commentLikePort.getCommentLikeCount(any())).willReturn(20L);
+
+            var result = sut.getComment("commentId");
+
+            // Then
+            then(result)
+                .hasFieldOrPropertyWithValue("id", comment.getId())
+                .hasFieldOrPropertyWithValue("videoId", comment.getVideoId())
+                .hasFieldOrPropertyWithValue("text", comment.getText())
+                .hasFieldOrPropertyWithValue("authorId", author.getId())
+                .hasFieldOrPropertyWithValue("authorName", author.getName())
+                .hasFieldOrPropertyWithValue("authorProfileImageUrl", author.getProfileImageUrl())
+                .hasFieldOrPropertyWithValue("likeCount", 20L);
         }
     }
 }

@@ -3,8 +3,10 @@ package com.example.mytv.adapter.in.api;
 import com.example.mytv.adapter.in.api.dto.CommandResponse;
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.port.in.CommentUseCase;
+import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,4 +49,10 @@ public class CommentApiController {
     ) {
         commentUseCase.deleteComment(commentId, user);
     }
+
+    @GetMapping("{commentId}")
+    CommentResponse getComment(@PathVariable String commentId) {
+        return commentUseCase.getComment(commentId);
+    }
+
 }

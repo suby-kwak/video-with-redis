@@ -2,8 +2,11 @@ package com.example.mytv.application.port;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.port.in.CommentUseCase;
+import com.example.mytv.application.port.out.CommentLikePort;
 import com.example.mytv.application.port.out.CommentPort;
+import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.domain.comment.Comment;
+import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
@@ -11,14 +14,23 @@ import com.example.mytv.exception.ForbiddenRequestException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService implements CommentUseCase {
     private final CommentPort commentPort;
+    private final LoadUserPort loadUserPort;
+    private final CommentLikePort commentLikePort;
 
-    public CommentService(CommentPort commentPort) {
+    public CommentService(
+        CommentPort commentPort,
+        @Qualifier("userCachePersistenceAdapter") LoadUserPort loadUserPort,
+        CommentLikePort commentLikePort)
+    {
         this.commentPort = commentPort;
+        this.loadUserPort = loadUserPort;
+        this.commentLikePort = commentLikePort;
     }
 
     @Override
@@ -62,6 +74,21 @@ public class CommentService implements CommentUseCase {
         }
 
         commentPort.deleteComment(commentId);
+    }
+
+    /**
+     * user -> redis user:{userId} 로 조회
+     * commentLike -> redis comment:like:{commentId} 로 부터 조회
+     */
+    @Override
+    public CommentResponse getComment(String commentId) {
+        var comment = commentPort.loadComment(commentId)
+            .orElseThrow(() -> new DomainNotFoundException("Comment Not Found."));
+        var user = loadUserPort.loadUser(comment.getAuthorId())
+            .orElse(User.defaultUser(comment.getAuthorId()));
+        var commentLikeCount = commentLikePort.getCommentLikeCount(commentId);
+
+        return CommentResponse.from(comment, user, commentLikeCount);
     }
 
     private boolean equalMetaData(Comment comment, CommentRequest commentRequest) {
