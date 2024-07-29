@@ -4,6 +4,7 @@ import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
+import java.util.List;
 
 public interface CommentUseCase {
     Comment createComment(User user, CommentRequest commentRequest);
@@ -13,4 +14,6 @@ public interface CommentUseCase {
     void deleteComment(String commentId, User user);
 
     CommentResponse getComment(String commentId);
+
+    List<CommentResponse> listComments(String videoId, String order, String offset, Integer size);
 }

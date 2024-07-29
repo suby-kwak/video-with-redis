@@ -2,7 +2,7 @@ package com.example.mytv.adapter.out;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import com.example.mytv.adapter.out.mongo.CommentDocument;
+import com.example.mytv.adapter.out.mongo.comment.CommentDocument;
 import com.example.mytv.domain.comment.CommentFixtures;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Builder
 @Getter
+@ToString
 public class Comment {
     private String id;
     private String channelId;

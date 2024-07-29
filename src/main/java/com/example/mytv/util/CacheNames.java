@@ -18,4 +18,5 @@ public class CacheNames {
 
     public static final String COMMENT = "comment";
     public static final String COMMENT_LIKE = COMMENT + SEPARATOR + "like";
+    public static final String COMMENT_PINNED = COMMENT + SEPARATOR + "pinned";
 }

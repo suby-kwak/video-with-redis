@@ -2,26 +2,34 @@ package com.example.mytv.adapter.out;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.example.mytv.adapter.out.mongo.CommentDocument;
-import com.example.mytv.adapter.out.mongo.CommentMongoRepository;
+import com.example.mytv.adapter.out.mongo.comment.CommentDocument;
+import com.example.mytv.adapter.out.mongo.comment.CommentMongoRepository;
+import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 class CommentPersistenceAdapterTest {
     private CommentPersistenceAdapter sut;
 
     private final CommentMongoRepository commentMongoRepository = mock(CommentMongoRepository.class);
+    private final StringRedisTemplate stringRedisTemplate = mock(StringRedisTemplate.class, RETURNS_DEEP_STUBS);
 
     @BeforeEach
     void setUp() {
-        sut = new CommentPersistenceAdapter(commentMongoRepository);
+        sut = new CommentPersistenceAdapter(commentMongoRepository,stringRedisTemplate);
     }
 
     @Test
@@ -53,10 +61,70 @@ class CommentPersistenceAdapterTest {
         var result = sut.loadComment(commentId);
         then(result)
             .isPresent()
-            .hasValueSatisfying(c -> {
+            .hasValueSatisfying(c ->
                 then(c)
                     .hasFieldOrPropertyWithValue("id", commentId)
-                    .hasFieldOrPropertyWithValue("text", comment.getText());
-            });
+                    .hasFieldOrPropertyWithValue("text", comment.getText())
+            );
+    }
+
+    @Nested
+    @DisplayName("댓글 목록")
+    class ListComment {
+        @Test
+        @DisplayName("작성 시간 역순으로 size 만큼 목록 반환")
+        void testGivenPublishedAtDescThenReturnList() {
+            var videoId = "videoId";
+            var list = LongStream.range(1, 6)
+                    .mapToObj(i -> documentBuilder(videoId, LocalDateTime.now()))
+                    .toList();
+            given(commentMongoRepository.findAllByVideoIdOrderByPublishedAtDesc(any(), any(), any()))
+                .willReturn(list);
+            var result = sut.listComment(videoId, "time", "2024-05-01T12:34:56.789", 5);
+
+            then(result)
+                .hasSize(5);
+        }
+    }
+
+    @Nested
+    @DisplayName("고정 댓글")
+    class PinnedComment {
+        @Test
+        void givenPinnedCommentThenReturnOptionalComment() {
+            var videoId = "videoId";
+            var commentId = "commentId";
+            given(stringRedisTemplate.opsForValue().get(any())).willReturn(commentId);
+            given(commentMongoRepository.findById(any())).willReturn(Optional.of(documentBuilder(videoId, LocalDateTime.now())));
+
+            var result = sut.getPinnedComment("videoId");
+
+            then(result)
+                .isPresent();
+        }
+
+        @Test
+        void givenNoPinnedCommentThenReturnEmptyOptional() {
+            given(stringRedisTemplate.opsForValue().get(any())).willReturn(null);
+
+            var result = sut.getPinnedComment("videoId");
+
+            then(result)
+                .isNotPresent();
+        }
+    }
+
+    private CommentDocument documentBuilder(String videoId, LocalDateTime publishedAt) {
+        var id = UUID.randomUUID().toString();
+        return CommentDocument.from(
+            Comment.builder()
+                .id(id)
+                .channelId("channelId")
+                .videoId(videoId)
+                .text("text " + id)
+                .authorId("user")
+                .publishedAt(publishedAt)
+                .build()
+        );
     }
 }

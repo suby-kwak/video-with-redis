@@ -1,11 +1,11 @@
-package com.example.mytv.adapter.out.mongo;
+package com.example.mytv.adapter.out.mongo.comment;
 
 import com.example.mytv.domain.comment.Comment;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("comment")
@@ -18,6 +18,7 @@ public class CommentDocument {
     private String videoId;
     private String authorId;
     private String text;
+    @Indexed
     private LocalDateTime publishedAt;
 
     public static CommentDocument from(Comment comment) {
