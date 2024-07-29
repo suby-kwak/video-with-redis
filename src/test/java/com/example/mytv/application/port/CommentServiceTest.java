@@ -5,6 +5,7 @@ import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
@@ -19,7 +20,10 @@ import com.example.mytv.domain.user.UserFixtures;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -154,7 +158,7 @@ class CommentServiceTest {
     @DisplayName("댓글 한개 조회")
     class GetComment {
         @Test
-        void givenCommentThenReturnComment() {
+        void givenCommentIdThenReturnComment() {
             var comment = CommentFixtures.stub("commentId");
             var author = User.builder().id(comment.getAuthorId()).name("author").profileImageUrl("https://example.com/profile.jpg").build();
             given(commentPort.loadComment(any())).willReturn(Optional.of(comment));
@@ -172,6 +176,38 @@ class CommentServiceTest {
                 .hasFieldOrPropertyWithValue("authorName", author.getName())
                 .hasFieldOrPropertyWithValue("authorProfileImageUrl", author.getProfileImageUrl())
                 .hasFieldOrPropertyWithValue("likeCount", 20L);
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 목록 조회")
+    class ListComment {
+        @Test
+        void testListComment() {
+            var videoId = "videoId";
+            var comments = LongStream.range(1, 6)
+                .mapToObj(l -> Comment.builder()
+                    .id(UUID.randomUUID().toString())
+                    .channelId("channelId")
+                    .videoId(videoId)
+                    .text("text " + l)
+                    .authorId("user")
+                    .publishedAt(LocalDateTime.now())
+                    .build()
+                )
+                .toList();
+            var author = User.builder().id("user").name("author").profileImageUrl("https://example.com/profile.jpg").build();
+            given(commentPort.listComment(any(), any(), any(), any())).willReturn(comments);
+            given(loadUserPort.loadUser(any())).willReturn(Optional.of(author));
+            given(commentLikePort.getCommentLikeCount(any())).willReturn(20L);
+
+            var result = sut.listComments(videoId, "time", LocalDateTime.now().toString(), 5);
+
+            // Then
+            then(result)
+                .hasSize(5);
+            verify(loadUserPort, times(5)).loadUser(any());
+            verify(commentLikePort, times(5)).getCommentLikeCount(any());
         }
     }
 }

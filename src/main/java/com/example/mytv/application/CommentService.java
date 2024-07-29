@@ -12,8 +12,12 @@ import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -86,9 +90,32 @@ public class CommentService implements CommentUseCase {
             .orElseThrow(() -> new DomainNotFoundException("Comment Not Found."));
         var user = loadUserPort.loadUser(comment.getAuthorId())
             .orElse(User.defaultUser(comment.getAuthorId()));
-        var commentLikeCount = commentLikePort.getCommentLikeCount(commentId);
+        var commentLikeCount = commentLikePort.getCommentLikeCount(comment.getId());
 
         return CommentResponse.from(comment, user, commentLikeCount);
+    }
+
+    @Override
+    public List<CommentResponse> listComments(String videoId, String order, String offset, Integer size) {
+        var list = commentPort.listComment(videoId, order, offset, size).stream()
+            .map(comment -> {
+                var user = loadUserPort.loadUser(comment.getAuthorId())
+                    .orElse(User.defaultUser(comment.getAuthorId()));
+                var commentLikeCount = commentLikePort.getCommentLikeCount(comment.getId());
+                return CommentResponse.from(comment, user, commentLikeCount);
+            })
+            .collect(Collectors.toList());
+        commentPort.getPinnedComment(videoId)
+            .ifPresent(pinnedComment -> {
+                var user = loadUserPort.loadUser(pinnedComment.getAuthorId())
+                    .orElse(User.defaultUser(pinnedComment.getAuthorId()));
+                var commentLikeCount = commentLikePort.getCommentLikeCount(pinnedComment.getId());
+                var pinnedCommentResponse = CommentResponse.from(pinnedComment, user, commentLikeCount);
+
+                list.add(0, pinnedCommentResponse);
+            });
+
+        return list;
     }
 
     private boolean equalMetaData(Comment comment, CommentRequest commentRequest) {

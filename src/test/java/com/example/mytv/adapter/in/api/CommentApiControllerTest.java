@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,6 +26,7 @@ import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -253,6 +255,29 @@ class CommentApiControllerTest {
                 )
                 .andExpect(
                     status().isNotFound()
+                );
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/v1/comments/list")
+    class ListComment {
+        @Test
+        @DisplayName("시간 순 정렬")
+        void testGivenTimeOrderListCommentsByPublishedAt() throws Exception {
+            var videoId = "videoId";
+            var order = "time";
+            var offset = LocalDateTime.now();
+            var size = 10;
+            mockMvc
+                .perform(
+                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&size={size}", videoId, order, offset, size)
+                )
+                .andExpect(
+                    status().isOk()
+                )
+                .andDo(
+                    print()
                 );
         }
     }

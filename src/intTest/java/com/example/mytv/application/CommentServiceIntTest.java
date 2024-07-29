@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
-import com.example.mytv.adapter.out.mongo.CommentDocument;
+import com.example.mytv.adapter.out.mongo.comment.CommentDocument;
 import com.example.mytv.adapter.out.redis.user.UserRedisHash;
 import com.example.mytv.adapter.out.redis.user.UserRedisRepository;
 import com.example.mytv.config.TestRedisConfig;
