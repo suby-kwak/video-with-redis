@@ -96,8 +96,8 @@ public class CommentService implements CommentUseCase {
     }
 
     @Override
-    public List<CommentResponse> listComments(String videoId, String order, String offset, Integer size) {
-        var list = commentPort.listComment(videoId, order, offset, size).stream()
+    public List<CommentResponse> listComments(String videoId, String order, String offset, Integer maxSize) {
+        var list = commentPort.listComment(videoId, order, offset, maxSize).stream()
             .map(comment -> {
                 var user = loadUserPort.loadUser(comment.getAuthorId())
                     .orElse(User.defaultUser(comment.getAuthorId()));

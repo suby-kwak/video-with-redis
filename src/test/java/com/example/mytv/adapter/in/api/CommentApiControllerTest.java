@@ -268,10 +268,10 @@ class CommentApiControllerTest {
             var videoId = "videoId";
             var order = "time";
             var offset = LocalDateTime.now();
-            var size = 10;
+            var maxSize = 10;
             mockMvc
                 .perform(
-                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&size={size}", videoId, order, offset, size)
+                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&maxSize={maxSize}", videoId, order, offset, maxSize)
                 )
                 .andExpect(
                     status().isOk()

@@ -9,7 +9,7 @@ public interface CommentPort {
     void deleteComment(String commentId);
     Optional<Comment> loadComment(String commentId);
 
-    List<Comment> listComment(String videoId, String order, String offset, Integer size);
+    List<Comment> listComment(String videoId, String order, String offset, Integer maxSize);
 
     Optional<Comment> getPinnedComment(String videoId);
 }
