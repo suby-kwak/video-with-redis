@@ -28,6 +28,7 @@ import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,7 +209,7 @@ class CommentApiControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /api/v1/comments/{commentId}")
+    @DisplayName("GET /api/v1/comments?commentId={commentId}")
     class GetComment {
         @Test
         @DisplayName("200 Ok, 해당 댓글 반환")
@@ -229,7 +230,7 @@ class CommentApiControllerTest {
 
             mockMvc
                 .perform(
-                    get("/api/v1/comments/{commentId}", commentId)
+                    get("/api/v1/comments?commentId={commentId}", commentId)
                 )
                 .andExpectAll(
                     status().isOk(),
@@ -251,7 +252,7 @@ class CommentApiControllerTest {
 
             mockMvc
                 .perform(
-                    get("/api/v1/comments/{commentId}", commentId)
+                    get("/api/v1/comments?commentId={commentId}", commentId)
                 )
                 .andExpect(
                     status().isNotFound()
@@ -269,6 +270,7 @@ class CommentApiControllerTest {
             var order = "time";
             var offset = LocalDateTime.now();
             var maxSize = 10;
+            given(commentUseCase.listComments(any(), any(), any(), any())).willReturn(Collections.emptyList());
             mockMvc
                 .perform(
                     get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&maxSize={maxSize}", videoId, order, offset, maxSize)
@@ -279,6 +281,8 @@ class CommentApiControllerTest {
                 .andDo(
                     print()
                 );
+
+            verify(commentUseCase).listComments(videoId, order, offset.toString(), maxSize);
         }
     }
 }

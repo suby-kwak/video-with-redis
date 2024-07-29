@@ -6,5 +6,5 @@ import org.springframework.data.domain.Limit;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CommentMongoRepository extends CrudRepository<CommentDocument, String> {
-    List<CommentDocument> findAllByVideoIdOrderByPublishedAtDesc(String videoId, LocalDateTime offset, Limit limit);
+    List<CommentDocument> findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(String videoId, LocalDateTime offset, Limit limit);
 }

@@ -32,7 +32,7 @@ public class CommentMongoRepositoryIntTest {
             mongoTemplate.save(CommentDocument.from(comment));
         }
 
-        var result = sut.findAllByVideoIdOrderByPublishedAtDesc(videoId, LocalDateTime.now(), Limit.of(5));
+        var result = sut.findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(videoId, LocalDateTime.now(), Limit.of(5));
 
         then(result)
             .hasSize(5)

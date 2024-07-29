@@ -78,7 +78,7 @@ class CommentPersistenceAdapterTest {
             var list = LongStream.range(1, 6)
                     .mapToObj(i -> documentBuilder(videoId, LocalDateTime.now()))
                     .toList();
-            given(commentMongoRepository.findAllByVideoIdOrderByPublishedAtDesc(any(), any(), any()))
+            given(commentMongoRepository.findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(any(), any(), any()))
                 .willReturn(list);
             var result = sut.listComment(videoId, "time", "2024-05-01T12:34:56.789", 5);
 

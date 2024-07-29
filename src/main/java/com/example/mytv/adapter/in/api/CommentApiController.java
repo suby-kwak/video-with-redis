@@ -53,8 +53,8 @@ public class CommentApiController {
         commentUseCase.deleteComment(commentId, user);
     }
 
-    @GetMapping("{commentId}")
-    CommentResponse getComment(@PathVariable String commentId) {
+    @GetMapping(params = {"commentId"})
+    CommentResponse getComment(@RequestParam String commentId) {
         return commentUseCase.getComment(commentId);
     }
 
