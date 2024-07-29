@@ -17,3 +17,7 @@ spring:
     mongodb:
       host: localhost
       port: 27017
+      database: mytv
+      username: local
+      password: local
+      authentication-database: admin

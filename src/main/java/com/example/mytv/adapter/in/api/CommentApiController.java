@@ -54,5 +54,4 @@ public class CommentApiController {
     CommentResponse getComment(@PathVariable String commentId) {
         return commentUseCase.getComment(commentId);
     }
-
 }
