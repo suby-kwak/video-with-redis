@@ -11,15 +11,13 @@ import com.example.mytv.domain.user.User;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService implements CommentUseCase {
@@ -43,6 +41,7 @@ public class CommentService implements CommentUseCase {
             .id(UUID.randomUUID().toString())
             .channelId(commentRequest.getChannelId())
             .videoId(commentRequest.getVideoId())
+            .parentId(commentRequest.getParentId())
             .text(commentRequest.getText())
             .authorId(user.getId())
             .publishedAt(LocalDateTime.now())
@@ -118,8 +117,35 @@ public class CommentService implements CommentUseCase {
         return list;
     }
 
+    @Override
+    public List<CommentResponse> listReplies(String parentId, String offset, Integer maxSize) {
+        return commentPort.listReply(parentId, offset, maxSize).stream()
+            .map(comment -> {
+                var user = loadUserPort.loadUser(comment.getAuthorId())
+                    .orElse(User.defaultUser(comment.getAuthorId()));
+                var commentLikeCount = commentLikePort.getCommentLikeCount(comment.getId());
+                return CommentResponse.from(comment, user, commentLikeCount);
+            })
+            .collect(Collectors.toList());
+    }
+
     private boolean equalMetaData(Comment comment, CommentRequest commentRequest) {
         return Objects.equals(comment.getChannelId(), commentRequest.getChannelId()) &&
             Objects.equals(comment.getVideoId(), commentRequest.getVideoId());
     }
+
+//    private CommentResponse buildComment(Comment comment) {
+//        var user = loadUserPort.loadUser(comment.getAuthorId())
+//                .orElse(User.defaultUser(comment.getAuthorId()));
+//        var commentLikeCount = commentLikePort.getCommentLikeCount(comment.getId());
+//        return CommentResponse.from(comment, user, commentLikeCount);
+//    }
+
+//    var replies = commentPort.listReply(parentId, offset, maxSize);
+//    var users = getUserMap(replies.stream().map(Comment::getAuthorId).toList());
+//
+//    private Map<String, User> getUserMap(List<String> userIds) {
+//        return loadUserPort.loadAllUsers(userIds).stream()
+//            .collect(Collectors.toMap(User::getId, Function.identity()));
+//    }
 }

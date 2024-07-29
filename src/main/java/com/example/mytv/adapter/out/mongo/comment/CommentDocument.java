@@ -15,7 +15,10 @@ public class CommentDocument {
     @Id
     private String id;
     private String channelId;
+    @Indexed
     private String videoId;
+    @Indexed
+    private String parentId;
     private String authorId;
     private String text;
     @Indexed
@@ -26,6 +29,7 @@ public class CommentDocument {
             comment.getId(),
             comment.getChannelId(),
             comment.getVideoId(),
+            comment.getParentId(),
             comment.getAuthorId(),
             comment.getText(),
             comment.getPublishedAt()
@@ -37,6 +41,7 @@ public class CommentDocument {
             .id(this.getId())
             .channelId(this.getChannelId())
             .videoId(this.getVideoId())
+            .parentId(this.getParentId())
             .text(this.getText())
             .authorId(this.authorId)
             .publishedAt(this.getPublishedAt())

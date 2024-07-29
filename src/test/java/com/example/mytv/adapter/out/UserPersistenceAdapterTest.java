@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
+
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ class UserPersistenceAdapterTest {
     }
 
     @Test
-    void loadUser() {
+    void testLoadUser() {
         // Given
         var userJpaEntity = new UserJpaEntity("userId", "name", "https://example.com/profile.jpg");
         given(userJpaRepository.findById(any())).willReturn(Optional.of(userJpaEntity));
@@ -37,5 +39,23 @@ class UserPersistenceAdapterTest {
                 then(user.getId()).isEqualTo("userId");
                 then(user.getName()).isEqualTo("name");
             });
+    }
+
+    @Test
+    void testLoadAllUsers() {
+        // Given
+        var list = List.of(
+            new UserJpaEntity("userId", "name", "https://example.com/profile.jpg"),
+            new UserJpaEntity("userId2", "name2", "https://example.com/profile2.jpg")
+        );
+        given(userJpaRepository.findAllById(any())).willReturn(list);
+
+        // When
+        var result = sut.loadAllUsers(List.of("userId", "userId2"));
+
+        // Then
+        then(result)
+            .extracting("id")
+            .contains("userId", "userId2");
     }
 }

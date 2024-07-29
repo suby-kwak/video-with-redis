@@ -72,11 +72,11 @@ class CommentPersistenceAdapterTest {
     @DisplayName("댓글 목록")
     class ListComment {
         @Test
-        @DisplayName("작성 시간 역순으로 size 만큼 목록 반환")
+        @DisplayName("작성 시간 역순으로 maxSize 만큼 목록 반환")
         void testGivenPublishedAtDescThenReturnList() {
             var videoId = "videoId";
             var list = LongStream.range(1, 6)
-                    .mapToObj(i -> documentBuilder(videoId, LocalDateTime.now()))
+                    .mapToObj(i -> commentBuilder(videoId, LocalDateTime.now()))
                     .toList();
             given(commentMongoRepository.findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(any(), any(), any()))
                 .willReturn(list);
@@ -88,6 +88,25 @@ class CommentPersistenceAdapterTest {
     }
 
     @Nested
+    @DisplayName("대댓글 목록")
+    class ListReply {
+        @Test
+        @DisplayName("작성 시간 역순으로 maxSize 만큼 목록 반환")
+        void testGivenPublishedAtDescThenReturnList() {
+            var parentId = "parentId";
+            var list = LongStream.range(1, 6)
+                    .mapToObj(i -> replyBuilder(parentId, LocalDateTime.now()))
+                    .toList();
+            given(commentMongoRepository.findAllByParentIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(any(), any(), any()))
+                    .willReturn(list);
+            var result = sut.listReply(parentId, "2024-05-01T12:34:56.789", 5);
+
+            then(result)
+                    .hasSize(5);
+        }
+    }
+
+    @Nested
     @DisplayName("고정 댓글")
     class PinnedComment {
         @Test
@@ -95,7 +114,7 @@ class CommentPersistenceAdapterTest {
             var videoId = "videoId";
             var commentId = "commentId";
             given(stringRedisTemplate.opsForValue().get(any())).willReturn(commentId);
-            given(commentMongoRepository.findById(any())).willReturn(Optional.of(documentBuilder(videoId, LocalDateTime.now())));
+            given(commentMongoRepository.findById(any())).willReturn(Optional.of(commentBuilder(videoId, LocalDateTime.now())));
 
             var result = sut.getPinnedComment("videoId");
 
@@ -114,13 +133,29 @@ class CommentPersistenceAdapterTest {
         }
     }
 
-    private CommentDocument documentBuilder(String videoId, LocalDateTime publishedAt) {
+    private CommentDocument commentBuilder(String videoId, LocalDateTime publishedAt) {
         var id = UUID.randomUUID().toString();
         return CommentDocument.from(
             Comment.builder()
                 .id(id)
                 .channelId("channelId")
                 .videoId(videoId)
+                .parentId(null)
+                .text("text " + id)
+                .authorId("user")
+                .publishedAt(publishedAt)
+                .build()
+        );
+    }
+
+    private CommentDocument replyBuilder(String parentId, LocalDateTime publishedAt) {
+        var id = UUID.randomUUID().toString();
+        return CommentDocument.from(
+            Comment.builder()
+                .id(id)
+                .channelId("channelId")
+                .videoId("videoId")
+                .parentId(parentId)
                 .text("text " + id)
                 .authorId("user")
                 .publishedAt(publishedAt)

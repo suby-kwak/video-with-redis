@@ -10,6 +10,8 @@ import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
 import com.example.mytv.adapter.out.redis.user.UserRedisHash;
 import com.example.mytv.adapter.out.redis.user.UserRedisRepository;
 import com.example.mytv.domain.user.UserFixtures;
+
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +30,7 @@ class UserCachePersistenceAdapterTest {
     }
 
     @Nested
-    @DisplayName("loadCUser")
+    @DisplayName("loadUser")
     class LoadUser {
         @Test
         @DisplayName("Redis 에서 User 을 찾을 수 있으면 UserRedisHash 에서 User 반환")
@@ -73,6 +75,25 @@ class UserCachePersistenceAdapterTest {
 
             then(result)
                 .isNotPresent();
+        }
+    }
+
+    @Nested
+    @DisplayName("loadAllUsers")
+    class LoadAllUsers {
+        @Test
+        @DisplayName("loadUser를 순회 조회")
+        void givenIdsThenReturnUsers() {
+            var id1 = "userId1";
+            var id2 = "userId2";
+            given(userRedisRepository.findById(any()))
+                .willReturn(Optional.of(UserRedisHash.from(UserFixtures.stub(id1))), Optional.of(UserRedisHash.from(UserFixtures.stub(id2))));
+
+            var result = sut.loadAllUsers(List.of(id1, id2));
+
+            then(result)
+                .extracting("id")
+                .contains("userId1", "userId2");
         }
     }
 }

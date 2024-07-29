@@ -50,6 +50,14 @@ public class CommentPersistenceAdapter implements CommentPort {
     }
 
     @Override
+    public List<Comment> listReply(String parentId, String offset, Integer maxSize) {
+        return commentMongoRepository.findAllByParentIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(parentId, LocalDateTime.parse(offset), Limit.of(maxSize))
+            .stream()
+            .map(CommentDocument::toDomain)
+            .toList();
+    }
+
+    @Override
     public Optional<Comment> getPinnedComment(String videoId) {
         var commentId = stringRedisTemplate.opsForValue().get(RedisKeyGenerator.getPinnedCommentKey(videoId));
         if (commentId == null) {

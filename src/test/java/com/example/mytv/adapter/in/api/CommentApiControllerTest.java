@@ -74,7 +74,7 @@ class CommentApiControllerTest {
         @DisplayName("200 OK, 생성된 id를 반환")
         void testCreateComment() throws Exception {
             // given
-            var request = new CommentRequest("channelId", "videoId", "comment");
+            var request = new CommentRequest("channelId", "videoId", null, "comment");
             given(commentUseCase.createComment(any(), any())).willReturn(CommentFixtures.stub("commentId"));
 
             // when
@@ -100,7 +100,7 @@ class CommentApiControllerTest {
         void testUpdateCommentThenOk() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any())).willReturn(CommentFixtures.stub(commentId));
 
             // when
@@ -122,7 +122,7 @@ class CommentApiControllerTest {
         void testGivenInvalidMetaDataWhenUpdateCommentThenBadRequest() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("otherChannelId", "otherVideoId", "new comment");
+            var request = new CommentRequest("otherChannelId", "otherVideoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new BadRequestException("Request metadata is invalid."));
 
@@ -145,7 +145,7 @@ class CommentApiControllerTest {
         void testGivenOtherAuthorWhenUpdateCommentThenForbidden() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new DomainNotFoundException("Comment Not Found."));
 
@@ -168,7 +168,7 @@ class CommentApiControllerTest {
         void testGivenNoCommentWhenUpdateCommentThenNotFound() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new ForbiddenRequestException("Request might not be properly authorized."));
 

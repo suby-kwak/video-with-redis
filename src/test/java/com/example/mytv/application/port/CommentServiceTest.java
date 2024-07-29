@@ -47,7 +47,7 @@ class CommentServiceTest {
     void testCreateComment() {
         // given
         var user = UserFixtures.stub();
-        var commentRequest = new CommentRequest("channelId", "videoId", "comment");
+        var commentRequest = new CommentRequest("channelId", "videoId", null, "comment");
         // when
         sut.createComment(user, commentRequest);
         // then
@@ -69,7 +69,7 @@ class CommentServiceTest {
             var commentId = "commentId";
             var user = UserFixtures.stub();
             var comment = CommentFixtures.stub(commentId);
-            var commentRequest = new CommentRequest("channelId", "videoId", "new comment");
+            var commentRequest = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentPort.loadComment(any())).willReturn(Optional.of(comment));
             given(commentPort.saveComment(any())).willAnswer(arg -> arg.getArgument(0));
 
@@ -83,7 +83,7 @@ class CommentServiceTest {
         void givenOtherMetaDataThenBadRequestException() {
             var commentId = "commentId";
             var user = UserFixtures.stub();
-            var commentRequest = new CommentRequest("otherChannelId", "otherVideoId", "new comment");
+            var commentRequest = new CommentRequest("otherChannelId", "otherVideoId", null, "new comment");
             given(commentPort.loadComment(any())).willReturn(Optional.of(CommentFixtures.stub(commentId)));
 
             thenThrownBy(() -> sut.updateComment(commentId, user, commentRequest))
@@ -95,7 +95,7 @@ class CommentServiceTest {
         void givenOtherUserThenForbiddenRequestException() {
             var commentId = "commentId";
             var otherUser = UserFixtures.stub("otherUser");
-            var commentRequest = new CommentRequest("channelId", "videoId", "new comment");
+            var commentRequest = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentPort.loadComment(any())).willReturn(Optional.of(CommentFixtures.stub(commentId)));
 
             thenThrownBy(() -> sut.updateComment(commentId, otherUser, commentRequest))
@@ -107,7 +107,7 @@ class CommentServiceTest {
         void givenNoCommentThenDomainNotFoundException() {
             var commentId = "commentId";
             var user = UserFixtures.stub();
-            var commentRequest = new CommentRequest("channelId", "videoId", "new comment");
+            var commentRequest = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentPort.loadComment(any())).willReturn(Optional.empty());
 
             thenThrownBy(() -> sut.updateComment(commentId, user, commentRequest))
@@ -180,7 +180,7 @@ class CommentServiceTest {
     }
 
     @Nested
-    @DisplayName("댓글 목록 조회")
+    @DisplayName("댓글 목록")
     class ListComment {
         @Test
         void testListComment() {
@@ -206,6 +206,39 @@ class CommentServiceTest {
             // Then
             then(result)
                 .hasSize(5);
+            verify(loadUserPort, times(5)).loadUser(any());
+            verify(commentLikePort, times(5)).getCommentLikeCount(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("대댓글 목록")
+    class ListReply {
+        @Test
+        void testListReply() {
+            var parentId = "parentId";
+            var comments = LongStream.range(1, 6)
+                    .mapToObj(l -> Comment.builder()
+                            .id(UUID.randomUUID().toString())
+                            .channelId("channelId")
+                            .videoId("videoId")
+                            .parentId(parentId)
+                            .text("text " + l)
+                            .authorId("user")
+                            .publishedAt(LocalDateTime.now())
+                            .build()
+                    )
+                    .toList();
+            var author = User.builder().id("user").name("author").profileImageUrl("https://example.com/profile.jpg").build();
+            given(commentPort.listReply(any(), any(), any())).willReturn(comments);
+            given(loadUserPort.loadUser(any())).willReturn(Optional.of(author));
+            given(commentLikePort.getCommentLikeCount(any())).willReturn(20L);
+
+            var result = sut.listReplies(parentId, LocalDateTime.now().toString(), 5);
+
+            // Then
+            then(result)
+                    .hasSize(5);
             verify(loadUserPort, times(5)).loadUser(any());
             verify(commentLikePort, times(5)).getCommentLikeCount(any());
         }

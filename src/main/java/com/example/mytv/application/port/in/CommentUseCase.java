@@ -16,4 +16,6 @@ public interface CommentUseCase {
     CommentResponse getComment(String commentId);
 
     List<CommentResponse> listComments(String videoId, String order, String offset, Integer maxSize);
+
+    List<CommentResponse> listReplies(String parentId, String offset, Integer maxSize);
 }

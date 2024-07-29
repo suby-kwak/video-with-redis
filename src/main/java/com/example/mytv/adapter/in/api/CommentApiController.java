@@ -5,7 +5,7 @@ import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.port.in.CommentUseCase;
 import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
-import java.util.Collections;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,5 +66,14 @@ public class CommentApiController {
         @RequestParam Integer maxSize
     ) {
         return commentUseCase.listComments(videoId, order, offset, maxSize);
+    }
+
+    @GetMapping(value = "reply", params = {"parentId"})
+    List<CommentResponse> listReplyComments(
+        @RequestParam String parentId,
+        @RequestParam String offset,
+        @RequestParam Integer maxSize
+    ) {
+        return commentUseCase.listReplies(parentId, offset, maxSize);
     }
 }
