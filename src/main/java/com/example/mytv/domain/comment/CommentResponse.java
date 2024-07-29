@@ -13,6 +13,7 @@ public class CommentResponse {
     private String id;
     private String channelId;
     private String videoId;
+    private String parentId;
     private String text;
     private LocalDateTime publishedAt;
     private String authorId;
@@ -25,6 +26,7 @@ public class CommentResponse {
             .id(comment.getId())
             .channelId(comment.getChannelId())
             .videoId(comment.getVideoId())
+            .parentId(comment.getParentId())
             .text(comment.getText())
             .publishedAt(comment.getPublishedAt())
             .authorId(author.getId())

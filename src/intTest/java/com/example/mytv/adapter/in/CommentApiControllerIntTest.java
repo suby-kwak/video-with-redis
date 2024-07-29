@@ -53,7 +53,7 @@ public class CommentApiControllerIntTest {
                     .header(HeaderAttribute.X_AUTH_KEY, authKey)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(
-                        new CommentRequest("channelId", "videoId", "댓글")
+                        new CommentRequest("channelId", "videoId", null, "댓글")
                     ))
             )
             .andExpectAll(

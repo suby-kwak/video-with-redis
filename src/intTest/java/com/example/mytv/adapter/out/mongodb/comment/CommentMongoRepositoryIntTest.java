@@ -23,7 +23,7 @@ public class CommentMongoRepositoryIntTest {
     private MongoTemplate mongoTemplate;
 
     @Test
-    void testListByPublishedAt() {
+    void testListCommentByPublishedAt() {
         var videoId = "videoId";
         for (int i = 0; i < 10; i++) {
             var id = UUID.randomUUID().toString();
@@ -32,12 +32,41 @@ public class CommentMongoRepositoryIntTest {
             mongoTemplate.save(CommentDocument.from(comment));
         }
 
-        var result = sut.findAllByVideoIdOrderByPublishedAtDesc(videoId, LocalDateTime.now(), Limit.of(5));
+        var result = sut.findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(videoId, LocalDateTime.now(), Limit.of(5));
 
         then(result)
             .hasSize(5)
             .extracting("publishedAt", LocalDateTime.class)
             .isSortedAccordingTo(Comparator.reverseOrder());
+
+        // result.forEach(e -> System.out.println(e));
+    }
+
+    @Test
+    void testListReplyByPublishedAt() {
+        var videoId = "videoId";
+        // save top level comment
+        var topLevelCommentId = UUID.randomUUID().toString();
+        var topLevelComment = Comment.builder().id(topLevelCommentId).channelId("channelId").videoId(videoId).text("text").authorId("user")
+                .publishedAt(LocalDateTime.now()).build();
+        mongoTemplate.save(CommentDocument.from(topLevelComment));
+        // save replies
+        for (int i = 0; i < 10; i++) {
+            var id = UUID.randomUUID().toString();
+            var comment = Comment.builder().id(id).channelId("channelId").videoId(videoId).parentId(topLevelCommentId).text("text " + i).authorId("user")
+                    .publishedAt(LocalDateTime.now()).build();
+            mongoTemplate.save(CommentDocument.from(comment));
+        }
+
+        var result = sut.findAllByParentIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(topLevelCommentId, LocalDateTime.now(), Limit.of(3));
+
+        then(result)
+                .hasSize(3)
+                .extracting("publishedAt", LocalDateTime.class)
+                .isSortedAccordingTo(Comparator.reverseOrder());
+        then(result)
+                .extracting("parentId")
+                .containsOnly(topLevelCommentId);
 
         // result.forEach(e -> System.out.println(e));
     }

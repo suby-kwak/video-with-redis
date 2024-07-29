@@ -3,7 +3,6 @@ package com.example.mytv.application;
 import com.example.mytv.application.port.in.UserUserCase;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.domain.user.User;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +14,7 @@ public class UserService implements UserUserCase {
     }
 
     @Override
-    public User getUser(@Nullable String userId) {
+    public User getUser(String userId) {
         if (userId == null) {
             return null;
         }

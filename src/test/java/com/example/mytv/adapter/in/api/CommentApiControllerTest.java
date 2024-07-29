@@ -28,6 +28,7 @@ import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,7 @@ class CommentApiControllerTest {
         @DisplayName("200 OK, 생성된 id를 반환")
         void testCreateComment() throws Exception {
             // given
-            var request = new CommentRequest("channelId", "videoId", "comment");
+            var request = new CommentRequest("channelId", "videoId", null, "comment");
             given(commentUseCase.createComment(any(), any())).willReturn(CommentFixtures.stub("commentId"));
 
             // when
@@ -99,7 +100,7 @@ class CommentApiControllerTest {
         void testUpdateCommentThenOk() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any())).willReturn(CommentFixtures.stub(commentId));
 
             // when
@@ -121,7 +122,7 @@ class CommentApiControllerTest {
         void testGivenInvalidMetaDataWhenUpdateCommentThenBadRequest() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("otherChannelId", "otherVideoId", "new comment");
+            var request = new CommentRequest("otherChannelId", "otherVideoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new BadRequestException("Request metadata is invalid."));
 
@@ -144,7 +145,7 @@ class CommentApiControllerTest {
         void testGivenOtherAuthorWhenUpdateCommentThenForbidden() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new DomainNotFoundException("Comment Not Found."));
 
@@ -167,7 +168,7 @@ class CommentApiControllerTest {
         void testGivenNoCommentWhenUpdateCommentThenNotFound() throws Exception {
             // given
             var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", "new comment");
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new ForbiddenRequestException("Request might not be properly authorized."));
 
@@ -208,7 +209,7 @@ class CommentApiControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /api/v1/comments/{commentId}")
+    @DisplayName("GET /api/v1/comments?commentId={commentId}")
     class GetComment {
         @Test
         @DisplayName("200 Ok, 해당 댓글 반환")
@@ -229,7 +230,7 @@ class CommentApiControllerTest {
 
             mockMvc
                 .perform(
-                    get("/api/v1/comments/{commentId}", commentId)
+                    get("/api/v1/comments?commentId={commentId}", commentId)
                 )
                 .andExpectAll(
                     status().isOk(),
@@ -251,7 +252,7 @@ class CommentApiControllerTest {
 
             mockMvc
                 .perform(
-                    get("/api/v1/comments/{commentId}", commentId)
+                    get("/api/v1/comments?commentId={commentId}", commentId)
                 )
                 .andExpect(
                     status().isNotFound()
@@ -268,10 +269,11 @@ class CommentApiControllerTest {
             var videoId = "videoId";
             var order = "time";
             var offset = LocalDateTime.now();
-            var size = 10;
+            var maxSize = 10;
+            given(commentUseCase.listComments(any(), any(), any(), any())).willReturn(Collections.emptyList());
             mockMvc
                 .perform(
-                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&size={size}", videoId, order, offset, size)
+                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&maxSize={maxSize}", videoId, order, offset, maxSize)
                 )
                 .andExpect(
                     status().isOk()
@@ -279,6 +281,8 @@ class CommentApiControllerTest {
                 .andDo(
                     print()
                 );
+
+            verify(commentUseCase).listComments(videoId, order, offset.toString(), maxSize);
         }
     }
 }
