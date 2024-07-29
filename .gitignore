@@ -27,3 +27,8 @@ build/
 .gradle/
 tools/mysql/
 tools/mongodb/
+/.idea/
+.idea/
+.idea/vcs.xml
+.idea/misc.xml
+.idea/gradle.xml
