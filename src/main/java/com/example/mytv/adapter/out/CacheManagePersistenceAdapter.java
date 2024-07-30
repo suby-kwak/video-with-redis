@@ -5,6 +5,7 @@ import com.example.mytv.common.CacheNames;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -16,8 +17,18 @@ public class CacheManagePersistenceAdapter implements CacheManagePort {
     }
 
     @Override
-    public List<String> getAllCacheNames() {
+    public List<String> getAllCacheKeys() {
         return CacheNames.getCacheNames();
+    }
+
+    @Override
+    public List<String> getAllCacheKeys(String pattern) {
+        var keys = stringRedisTemplate.keys(pattern + "*");
+
+        if (keys == null) {
+            return Collections.emptyList();
+        }
+        return keys.stream().toList();
     }
 
     @Override
@@ -27,9 +38,5 @@ public class CacheManagePersistenceAdapter implements CacheManagePort {
 
     List<String> getAllKeys() {
         return stringRedisTemplate.keys("*").stream().toList();
-    }
-
-    List<String> getAllKeys(String pattern) {
-        return stringRedisTemplate.keys(pattern + "*").stream().toList();
     }
 }

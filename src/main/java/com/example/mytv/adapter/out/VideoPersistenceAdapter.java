@@ -1,29 +1,35 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.common.CacheNames.VIDEO;
-import static com.example.mytv.common.CacheNames.VIDEO_LIST;
-import static com.example.mytv.common.RedisKeyGenerator.getVideoViewCountKey;
-
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;
 import com.example.mytv.application.port.out.LoadVideoPort;
 import com.example.mytv.application.port.out.SaveVideoPort;
+import com.example.mytv.common.RedisKeyGenerator;
 import com.example.mytv.domain.video.Video;
-import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
+
+import static com.example.mytv.common.CacheNames.VIDEO;
+import static com.example.mytv.common.CacheNames.VIDEO_LIST;
+import static com.example.mytv.common.RedisKeyGenerator.getVideoViewCountKey;
 
 @Component
 public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
     private final VideoJpaRepository videoJpaRepository;
     private final RedisTemplate<String, Long> redisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
-    public VideoPersistenceAdapter(VideoJpaRepository videoJpaRepository, RedisTemplate<String, Long> redisTemplate) {
+    public VideoPersistenceAdapter(VideoJpaRepository videoJpaRepository, RedisTemplate<String, Long> redisTemplate, StringRedisTemplate stringRedisTemplate) {
         this.videoJpaRepository = videoJpaRepository;
         this.redisTemplate = redisTemplate;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
@@ -59,6 +65,8 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
 //        Using RedisAtomicLong
 //        RedisAtomicLong redisAtomicLong = new RedisAtomicLong(videoViewCountKey, redisTemplate.getConnectionFactory());
 //        redisAtomicLong.incrementAndGet();
+
+//        stringRedisTemplate.opsForSet().add(getVideoViewCountSetKey(), videoId);
     }
 
     @Override
@@ -66,5 +74,24 @@ public class VideoPersistenceAdapter implements LoadVideoPort, SaveVideoPort {
         var videoViewCountKey = getVideoViewCountKey(videoId);
         var viewCont = redisTemplate.opsForValue().get(videoViewCountKey);
         return viewCont == null ? 0 : viewCont;
+    }
+
+    @Override
+    public List<String> getAllVideoIdsWithViewCount() {
+        var members = stringRedisTemplate.opsForSet().members(RedisKeyGenerator.getVideoViewCountSetKey());
+        if (members == null) {
+            return Collections.emptyList();
+        }
+
+        return members.stream().toList();
+    }
+
+    @Override
+    public void syncViewCount(String videoId) {
+        videoJpaRepository.findById(videoId)
+            .ifPresent(videoJpaEntity -> {
+                videoJpaEntity.updateViewCount(redisTemplate.opsForValue().get(RedisKeyGenerator.getVideoViewCountKey(videoId)));
+                videoJpaRepository.save(videoJpaEntity);
+            });
     }
 }

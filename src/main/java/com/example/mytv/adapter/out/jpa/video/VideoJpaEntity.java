@@ -20,6 +20,7 @@ public class VideoJpaEntity {
     private String thumbnailUrl;
     private String fileUrl;
     private String channelId;
+    private Long viewCount = 0L;
     private LocalDateTime publishedAt;
 
     public Video toDomain() {
@@ -42,7 +43,12 @@ public class VideoJpaEntity {
             video.getThumbnailUrl(),
             video.getFileUrl(),
             video.getChannelId(),
+            video.getViewCount(),
             video.getPublishedAt()
         );
+    }
+
+    public void updateViewCount(Long viewCount) {
+        this.viewCount = viewCount;
     }
 }

@@ -14,6 +14,8 @@ import com.example.mytv.domain.video.VideoFixtures;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,11 +33,13 @@ class VideoPersistenceAdapterTest {
 
     private final VideoJpaRepository videoJpaRepository = mock(VideoJpaRepository.class);
     private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class);
+    private final StringRedisTemplate stringRedisTemplate = mock(StringRedisTemplate.class, Mockito.RETURNS_DEEP_STUBS);
     private final ValueOperations<String, Long> valueOperations = mock(ValueOperations.class);
+
 
     @BeforeEach
     void setUp() {
-        sut = new VideoPersistenceAdapter(videoJpaRepository, redisTemplate);
+        sut = new VideoPersistenceAdapter(videoJpaRepository, redisTemplate, stringRedisTemplate);
         given(redisTemplate.opsForValue()).willReturn(valueOperations);
     }
 
@@ -132,5 +137,26 @@ class VideoPersistenceAdapterTest {
         var result = sut.getViewCount("video1");
 
         then(result).isEqualTo(0L);
+    }
+
+    @Test
+    void testGetAllVideoIdsWithViewCount() {
+        given(stringRedisTemplate.opsForSet().members(any())).willReturn(Set.of("videoId1", "videoId2", "videoId3"));
+
+        var result = sut.getAllVideoIdsWithViewCount();
+
+        then(result).contains("videoId1", "videoId2", "videoId3");
+    }
+
+    @Test
+    void testSyncViewCount() {
+        given(redisTemplate.opsForValue().get(any())).willReturn(20L);
+        given(videoJpaRepository.findById(any())).willReturn(Optional.of(new VideoJpaEntity()));
+
+        sut.syncViewCount("videoId");
+
+        var argumentCaptor = ArgumentCaptor.forClass(VideoJpaEntity.class);
+        verify(videoJpaRepository).save(argumentCaptor.capture());
+        then(argumentCaptor.getValue().getViewCount()).isEqualTo(20L);
     }
 }
