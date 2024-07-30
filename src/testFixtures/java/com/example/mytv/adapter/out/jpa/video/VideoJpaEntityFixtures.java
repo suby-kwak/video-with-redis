@@ -11,6 +11,7 @@ public class VideoJpaEntityFixtures {
             "https://example.com/thumbnail.jpg",
             "https://example.com/video.mp4",
             "channelId",
+            10L,
             LocalDateTime.now()
         );
     }

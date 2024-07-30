@@ -53,7 +53,7 @@ public class CacheManagerPersistenceAdapterIntTest {
 
     @Test
     public void testCacheKeysByPattern() {
-        sut.getAllKeys("channel")
+        sut.getAllCacheKeys("channel")
             .forEach(key -> System.out.println(key));
     }
 
