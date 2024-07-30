@@ -1,4 +1,4 @@
-package com.example.mytv.util;
+package com.example.mytv.common;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

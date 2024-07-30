@@ -1,8 +1,8 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
-import static com.example.mytv.util.RedisKeyGenerator.getSubscribeChannelKey;
-import static com.example.mytv.util.RedisKeyGenerator.getSubscribeUserKey;
+import static com.example.mytv.common.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
+import static com.example.mytv.common.RedisKeyGenerator.getSubscribeChannelKey;
+import static com.example.mytv.common.RedisKeyGenerator.getSubscribeUserKey;
 
 import com.example.mytv.adapter.out.jpa.channel.ChannelJpaEntity;
 import com.example.mytv.adapter.out.jpa.subscribe.SubscribeJpaEntity;

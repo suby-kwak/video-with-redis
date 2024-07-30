@@ -1,6 +1,6 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.util.RedisKeyGenerator.getVideoLikeKey;
+import static com.example.mytv.common.RedisKeyGenerator.getVideoLikeKey;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import com.example.mytv.config.TestRedisConfig;

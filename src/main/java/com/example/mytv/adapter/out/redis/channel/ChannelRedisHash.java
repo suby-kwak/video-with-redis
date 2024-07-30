@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import static com.example.mytv.util.CacheNames.CHANNEL;
+import static com.example.mytv.common.CacheNames.CHANNEL;
 
 @RedisHash(value = CHANNEL)
 @AllArgsConstructor

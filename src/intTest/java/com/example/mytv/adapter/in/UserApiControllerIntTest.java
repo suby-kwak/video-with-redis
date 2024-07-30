@@ -9,7 +9,7 @@ import com.example.mytv.adapter.in.api.HeaderAttribute;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;
 import com.example.mytv.config.TestRedisConfig;
-import com.example.mytv.util.RedisKeyGenerator;
+import com.example.mytv.common.RedisKeyGenerator;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

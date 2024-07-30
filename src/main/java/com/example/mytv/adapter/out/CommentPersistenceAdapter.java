@@ -4,7 +4,7 @@ import com.example.mytv.adapter.out.mongo.comment.CommentDocument;
 import com.example.mytv.adapter.out.mongo.comment.CommentMongoRepository;
 import com.example.mytv.application.port.out.CommentPort;
 import com.example.mytv.domain.comment.Comment;
-import com.example.mytv.util.RedisKeyGenerator;
+import com.example.mytv.common.RedisKeyGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

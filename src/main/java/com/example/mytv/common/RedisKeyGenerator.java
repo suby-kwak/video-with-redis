@@ -1,13 +1,13 @@
-package com.example.mytv.util;
+package com.example.mytv.common;
 
-import static com.example.mytv.util.CacheNames.COMMENT_LIKE;
-import static com.example.mytv.util.CacheNames.COMMENT_PINNED;
-import static com.example.mytv.util.CacheNames.SEPARATOR;
-import static com.example.mytv.util.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
-import static com.example.mytv.util.CacheNames.SUBSCRIBE_USER;
-import static com.example.mytv.util.CacheNames.USER_SESSION;
-import static com.example.mytv.util.CacheNames.VIDEO_LIKE;
-import static com.example.mytv.util.CacheNames.VIDEO_VIEW_COUNT;
+import static com.example.mytv.common.CacheNames.COMMENT_LIKE;
+import static com.example.mytv.common.CacheNames.COMMENT_PINNED;
+import static com.example.mytv.common.CacheNames.SEPARATOR;
+import static com.example.mytv.common.CacheNames.SUBSCRIBE_CHANNEL_BY_USER;
+import static com.example.mytv.common.CacheNames.SUBSCRIBE_USER;
+import static com.example.mytv.common.CacheNames.USER_SESSION;
+import static com.example.mytv.common.CacheNames.VIDEO_LIKE;
+import static com.example.mytv.common.CacheNames.VIDEO_VIEW_COUNT;
 
 public class RedisKeyGenerator {
     public static String getUserSessionKey(String authKey) {
