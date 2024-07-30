@@ -1,6 +1,6 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.util.RedisKeyGenerator.getCommentLikeKey;
+import static com.example.mytv.common.RedisKeyGenerator.getCommentLikeKey;
 
 import com.example.mytv.application.port.out.CommentLikePort;
 import org.springframework.data.redis.core.RedisTemplate;

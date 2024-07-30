@@ -13,7 +13,7 @@ import com.example.mytv.config.TestRedisConfig;
 import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
 import com.example.mytv.domain.user.User;
-import com.example.mytv.util.RedisKeyGenerator;
+import com.example.mytv.common.RedisKeyGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

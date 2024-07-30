@@ -9,11 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.dto.VideoRequestFixtures;
-import com.example.mytv.application.port.out.LoadChannelPort;
-import com.example.mytv.application.port.out.LoadVideoPort;
-import com.example.mytv.application.port.out.SaveChannelPort;
-import com.example.mytv.application.port.out.SaveVideoPort;
-import com.example.mytv.application.port.out.VideoLikePort;
+import com.example.mytv.application.port.out.*;
 import com.example.mytv.domain.channel.ChannelFixtures;
 import com.example.mytv.domain.video.VideoFixtures;
 import java.util.Optional;
@@ -30,10 +26,11 @@ class VideoServiceTest {
     private final VideoLikePort videoLikePort = mock(VideoLikePort.class);
     private final LoadChannelPort loadChannelPort = mock(LoadChannelPort.class);
     private final SaveChannelPort saveChannelPort = mock(SaveChannelPort.class);
+    private final MessagePort messagePort = mock(MessagePort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new VideoService(loadVideoPort, saveVideoPort, videoLikePort, loadChannelPort, saveChannelPort);
+        sut = new VideoService(loadVideoPort, saveVideoPort, videoLikePort, loadChannelPort, saveChannelPort, messagePort);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.example.mytv.adapter.out;
 
 import com.example.mytv.application.port.out.CacheManagePort;
-import com.example.mytv.util.CacheNames;
+import com.example.mytv.common.CacheNames;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package com.example.mytv.adapter.out;
 
-import static com.example.mytv.util.CacheNames.VIDEO;
-import static com.example.mytv.util.CacheNames.VIDEO_LIST;
-import static com.example.mytv.util.RedisKeyGenerator.getVideoViewCountKey;
+import static com.example.mytv.common.CacheNames.VIDEO;
+import static com.example.mytv.common.CacheNames.VIDEO_LIST;
+import static com.example.mytv.common.RedisKeyGenerator.getVideoViewCountKey;
 
 import com.example.mytv.adapter.out.jpa.video.VideoJpaEntity;
 import com.example.mytv.adapter.out.jpa.video.VideoJpaRepository;

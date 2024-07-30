@@ -1,7 +1,7 @@
 package com.example.mytv.adapter.out;
 
 import com.example.mytv.application.port.out.UserSessionPort;
-import com.example.mytv.util.RedisKeyGenerator;
+import com.example.mytv.common.RedisKeyGenerator;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
