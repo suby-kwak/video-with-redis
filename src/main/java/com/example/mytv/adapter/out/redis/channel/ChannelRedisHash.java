@@ -7,7 +7,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-@RedisHash("channel")
+import static com.example.mytv.util.CacheNames.CHANNEL;
+
+@RedisHash(value = CHANNEL)
 @AllArgsConstructor
 @Getter
 public class ChannelRedisHash {
