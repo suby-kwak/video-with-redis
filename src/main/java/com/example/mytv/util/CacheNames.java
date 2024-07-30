@@ -1,8 +1,15 @@
 package com.example.mytv.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.reflect.Modifier.isStatic;
+
 public class CacheNames {
     public static final String SEPARATOR = ":";
 
+    public static final String USER = "user";
     public static final String USER_SESSION = "user-session";
 
     public static final String CHANNEL = "channel";
@@ -19,4 +26,23 @@ public class CacheNames {
     public static final String COMMENT = "comment";
     public static final String COMMENT_LIKE = COMMENT + SEPARATOR + "like";
     public static final String COMMENT_PINNED = COMMENT + SEPARATOR + "pinned";
+
+    public static List<String> getCacheNames() {
+        List<String> cacheNames = new ArrayList<>();
+
+        Field[] declaredFields = CacheNames.class.getDeclaredFields();
+        for (Field field : declaredFields) {
+            if (isStatic(field.getModifiers())) {
+                try {
+                    if (!SEPARATOR.equals(field.get(null))) {
+                        cacheNames.add((String) field.get(null));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return cacheNames;
+    }
 }

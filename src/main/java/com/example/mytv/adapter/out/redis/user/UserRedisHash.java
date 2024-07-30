@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("user")
+import static com.example.mytv.util.CacheNames.USER;
+
+@RedisHash(value = USER)
 @AllArgsConstructor
 @Getter
 public class UserRedisHash {
