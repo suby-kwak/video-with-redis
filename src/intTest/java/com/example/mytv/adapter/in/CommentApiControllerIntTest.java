@@ -4,7 +4,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.mytv.adapter.in.api.HeaderAttribute;
+import com.example.mytv.adapter.in.api.attribute.HeaderAttribute;
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.adapter.out.jpa.user.UserJpaEntity;
 import com.example.mytv.adapter.out.jpa.user.UserJpaRepository;

@@ -11,12 +11,12 @@ import com.example.mytv.domain.user.User;
 import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +25,7 @@ public class CommentService implements CommentUseCase {
     private final LoadUserPort loadUserPort;
     private final CommentLikePort commentLikePort;
 
-    public CommentService(
-        CommentPort commentPort,
-        @Qualifier("userCachePersistenceAdapter") LoadUserPort loadUserPort,
-        CommentLikePort commentLikePort)
-    {
+    public CommentService(CommentPort commentPort, LoadUserPort loadUserPort, CommentLikePort commentLikePort) {
         this.commentPort = commentPort;
         this.loadUserPort = loadUserPort;
         this.commentLikePort = commentLikePort;

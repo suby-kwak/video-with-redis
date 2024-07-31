@@ -1,12 +1,12 @@
 package com.example.mytv.adapter.in.resolver;
 
-import com.example.mytv.adapter.in.api.HeaderAttribute;
+import com.example.mytv.adapter.in.api.attribute.HeaderAttribute;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
 import com.example.mytv.domain.user.User;
 import com.example.mytv.exception.UnauthorizedException;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
