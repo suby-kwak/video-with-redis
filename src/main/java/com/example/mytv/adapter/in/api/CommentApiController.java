@@ -68,7 +68,7 @@ public class CommentApiController {
         return commentUseCase.listComments(videoId, order, offset, maxSize);
     }
 
-    @GetMapping(value = "reply", params = {"parentId"})
+    @GetMapping(value = "replies", params = {"parentId"})
     List<CommentResponse> listReplyComments(
         @RequestParam String parentId,
         @RequestParam String offset,

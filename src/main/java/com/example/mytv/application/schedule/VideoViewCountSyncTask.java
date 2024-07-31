@@ -23,13 +23,14 @@ public class VideoViewCountSyncTask {
         this.saveVideoPort = saveVideoPort;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 60000)
+    // 예시용 @Scheduled(fixedRate = 5000)
     public void syncVideoViewCount() {
         // schedule 동작 확인용
         System.out.println(LocalDateTime.now());
 
         // 방법 1
-        cacheManagePort.getAllCacheKeys(VIDEO_VIEW_COUNT + SEPARATOR)
+        cacheManagePort.getAllCacheNames(VIDEO_VIEW_COUNT + SEPARATOR)
             .forEach(key -> {
                 var videoId = key.replace(VIDEO_VIEW_COUNT + SEPARATOR, "");
                 saveVideoPort.syncViewCount(videoId);

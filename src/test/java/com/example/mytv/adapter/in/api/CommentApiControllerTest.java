@@ -13,11 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.mytv.adapter.in.api.attribute.HeaderAttribute;
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.port.in.CommentUseCase;
 import com.example.mytv.application.port.out.LoadUserPort;
 import com.example.mytv.application.port.out.UserSessionPort;
-import com.example.mytv.domain.comment.Comment;
 import com.example.mytv.domain.comment.CommentFixtures;
 import com.example.mytv.domain.comment.CommentResponse;
 import com.example.mytv.domain.user.User;
@@ -26,7 +26,7 @@ import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.Instant;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;

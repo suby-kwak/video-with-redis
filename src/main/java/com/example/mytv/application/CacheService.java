@@ -16,7 +16,7 @@ public class CacheService implements CacheManageUseCase {
 
     @Override
     public List<String> getAllCacheNames() {
-        return cacheManagePort.getAllCacheKeys();
+        return cacheManagePort.getAllCacheNames();
     }
 
     @Override

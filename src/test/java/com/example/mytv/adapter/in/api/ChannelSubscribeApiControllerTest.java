@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.mytv.adapter.in.api.attribute.HeaderAttribute;
 import com.example.mytv.application.port.in.SubscribeUseCase;
 import com.example.mytv.application.port.in.UserUserCase;
 import com.example.mytv.domain.channel.ChannelFixtures;

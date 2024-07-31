@@ -7,6 +7,10 @@ public class RedisKeyGenerator {
         return USER_SESSION + SEPARATOR + authKey;
     }
 
+    public static String getUserCommentBlock(String userId) {
+        return USER_COMMENT_BLOCK + SEPARATOR + userId;
+    }
+
     public static String getSubscribeChannelKey(String channelId) {
         return SUBSCRIBE_CHANNEL_BY_USER + SEPARATOR + channelId;
     }
@@ -34,4 +38,5 @@ public class RedisKeyGenerator {
     public static String getPinnedCommentKey(String videoId) {
         return COMMENT_PINNED + SEPARATOR + videoId;
     }
+
 }

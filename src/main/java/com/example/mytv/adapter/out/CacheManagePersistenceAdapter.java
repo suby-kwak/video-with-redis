@@ -17,12 +17,15 @@ public class CacheManagePersistenceAdapter implements CacheManagePort {
     }
 
     @Override
-    public List<String> getAllCacheKeys() {
+    public List<String> getAllCacheNames() {
+        // getAllKeys() 참조
+        // stringRedisTemplate.keys("*").stream().toList();
         return CacheNames.getCacheNames();
     }
 
     @Override
-    public List<String> getAllCacheKeys(String pattern) {
+    public List<String> getAllCacheNames(String pattern) {
+        // Redis KEYS operation
         var keys = stringRedisTemplate.keys(pattern + "*");
 
         if (keys == null) {

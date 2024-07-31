@@ -9,7 +9,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -25,7 +24,7 @@ class CacheManagePersistenceAdapterTest {
 
     @Test
     void testGetAllCacheNames() {
-        var result = sut.getAllCacheKeys();
+        var result = sut.getAllCacheNames();
 
         then(result)
             .contains(CacheNames.CHANNEL, CacheNames.USER, CacheNames.VIDEO)
@@ -35,7 +34,7 @@ class CacheManagePersistenceAdapterTest {
     @Test
     void testGivenKeySetWhenGetAllCacheKeysThenReturnKeyList() {
         given(stringRedisTemplate.keys(any())).willReturn(Set.of("video", "video:like", "video:list"));
-        var result = sut.getAllCacheKeys("video");
+        var result = sut.getAllCacheNames("video");
 
         then(result)
             .contains("video", "video:like", "video:list");
@@ -44,7 +43,7 @@ class CacheManagePersistenceAdapterTest {
     @Test
     void testGivenNullWhenGetAllCacheKeysThenReturnEmptyList() {
         given(stringRedisTemplate.keys(any())).willReturn(null);
-        var result = sut.getAllCacheKeys("video");
+        var result = sut.getAllCacheNames("video");
 
         then(result)
             .isEmpty();
