@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static com.example.mytv.common.CacheNames.SEPARATOR;
-import static com.example.mytv.common.CacheNames.VIDEO_VIEW_COUNT;
-
 @Component
 public class VideoViewCountSyncTask {
     private final CacheManagePort cacheManagePort;
@@ -24,20 +21,23 @@ public class VideoViewCountSyncTask {
     }
 
     @Scheduled(fixedRate = 60000)
-    // 예시용 @Scheduled(fixedRate = 5000)
     public void syncVideoViewCount() {
         // schedule 동작 확인용
         System.out.println(LocalDateTime.now());
 
         // 방법 1
-        cacheManagePort.getAllCacheNames(VIDEO_VIEW_COUNT + SEPARATOR)
-            .forEach(key -> {
-                var videoId = key.replace(VIDEO_VIEW_COUNT + SEPARATOR, "");
-                saveVideoPort.syncViewCount(videoId);
-            });
+//        cacheManagePort.getAllCacheNames(VIDEO_VIEW_COUNT + SEPARATOR)
+//            .forEach(key -> {
+//                // video:view-count:video1
+//                // video:view-count:video2
+//                var videoId = key.replace(VIDEO_VIEW_COUNT + SEPARATOR, "");
+//                System.out.println("sync:" + videoId);
+//
+//                saveVideoPort.syncViewCount(videoId);
+//            });
 
-        // 방법 2
-//        loadVideoPort.getAllVideoIdsWithViewCount()
-//            .forEach(saveVideoPort::syncViewCount);
+        // 방법 2, viewCount 변경이 있는 video 목록만 조회
+        loadVideoPort.getAllVideoIdsWithViewCount()
+            .forEach(saveVideoPort::syncViewCount);
     }
 }

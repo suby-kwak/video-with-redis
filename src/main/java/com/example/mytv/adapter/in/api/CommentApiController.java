@@ -58,17 +58,18 @@ public class CommentApiController {
         return commentUseCase.getComment(commentId);
     }
 
-    @GetMapping(value = "list", params = {"offset", "maxSize"})
+    @GetMapping(value = "list", params = {"videoId", "order", "offset", "maxSize"})
     List<CommentResponse> listComments(
+        User user,
         @RequestParam String videoId,
         @RequestParam(defaultValue = "time") String order,
         @RequestParam String offset,
         @RequestParam Integer maxSize
     ) {
-        return commentUseCase.listComments(videoId, order, offset, maxSize);
+        return commentUseCase.listComments(user, videoId, order, offset, maxSize);
     }
 
-    @GetMapping(value = "replies", params = {"parentId"})
+    @GetMapping(value = "reply", params = {"parentId"})
     List<CommentResponse> listReplyComments(
         @RequestParam String parentId,
         @RequestParam String offset,

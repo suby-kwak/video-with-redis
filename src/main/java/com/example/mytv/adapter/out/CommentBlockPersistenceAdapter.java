@@ -18,6 +18,7 @@ public class CommentBlockPersistenceAdapter implements CommentBlockPort {
 
     @Override
     public void saveUserCommentBlock(String userId, String commentId) {
+        // user:comment-block:userId [commentId1, commentId2]
         stringRedisTemplate.opsForSet().add(RedisKeyGenerator.getUserCommentBlock(userId), commentId);
     }
 

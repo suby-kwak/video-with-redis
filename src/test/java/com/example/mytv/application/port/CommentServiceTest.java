@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.CommentService;
+import com.example.mytv.application.port.out.CommentBlockPort;
 import com.example.mytv.application.port.out.CommentLikePort;
 import com.example.mytv.application.port.out.CommentPort;
 import com.example.mytv.application.port.out.LoadUserPort;
@@ -36,10 +37,11 @@ class CommentServiceTest {
     private final CommentPort commentPort = mock(CommentPort.class);
     private final LoadUserPort loadUserPort = mock(LoadUserPort.class);
     private final CommentLikePort commentLikePort = mock(CommentLikePort.class);
+    private final CommentBlockPort commentBlockPort = mock(CommentBlockPort.class);
 
     @BeforeEach
     void setUp() {
-        sut = new CommentService(commentPort, loadUserPort, commentLikePort);
+        sut = new CommentService(commentPort, loadUserPort, commentLikePort, commentBlockPort);
     }
 
     @Test

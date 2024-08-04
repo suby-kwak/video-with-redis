@@ -43,7 +43,7 @@ public class CommentPersistenceAdapter implements CommentPort {
 
     @Override
     public List<Comment> listComment(String videoId, String order, String offset, Integer maxSize) {
-        return commentMongoRepository.findAllByVideoIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(videoId, LocalDateTime.parse(offset), Limit.of(maxSize))
+        return commentMongoRepository.findAllByVideoIdAndParentIdAndPublishedAtLessThanEqualOrderByPublishedAtDesc(videoId, null, LocalDateTime.parse(offset), Limit.of(maxSize))
             .stream()
             .map(CommentDocument::toDomain)
             .toList();

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Component("userCachePersistenceAdapter")
 public class UserCachePersistenceAdapter implements LoadUserPort {
     private final UserJpaRepository userJpaRepository;
     private final UserRedisRepository userRedisRepository;

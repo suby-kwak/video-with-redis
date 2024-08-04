@@ -1,18 +1,5 @@
 package com.example.mytv.adapter.in.api;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.example.mytv.adapter.in.api.attribute.HeaderAttribute;
 import com.example.mytv.adapter.in.api.dto.CommentRequest;
 import com.example.mytv.application.port.in.CommentUseCase;
@@ -26,11 +13,6 @@ import com.example.mytv.exception.BadRequestException;
 import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,6 +22,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentApiController.class)
 class CommentApiControllerTest {
@@ -118,7 +114,7 @@ class CommentApiControllerTest {
         }
 
         @Test
-        @DisplayName("401 BadRequest, 댓글 meta 정보가 다를 경우 수정 실패")
+        @DisplayName("400 BadRequest, 댓글 meta 정보가 다를 경우 수정 실패")
         void testGivenInvalidMetaDataWhenUpdateCommentThenBadRequest() throws Exception {
             // given
             var commentId = "commentId";
@@ -145,6 +141,30 @@ class CommentApiControllerTest {
         void testGivenOtherAuthorWhenUpdateCommentThenForbidden() throws Exception {
             // given
             var commentId = "commentId";
+            var otherAuthKey = UUID.randomUUID().toString();
+            var request = new CommentRequest("channelId", "videoId", null, "new comment");
+            given(commentUseCase.updateComment(any(), any(), any()))
+                .willThrow(new ForbiddenRequestException("Request might not be properly authorized."));
+
+            // when
+            mockMvc
+                .perform(
+                    put("/api/v1/comments/{commentId}", commentId)
+                        .header(HeaderAttribute.X_AUTH_KEY, otherAuthKey)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                )
+                .andExpectAll(
+                    status().isForbidden(),
+                    jsonPath("$.type").value("forbidden")
+                );
+        }
+
+        @Test
+        @DisplayName("404 Not Found, 존재하지 않는 댓글 수정 실패")
+        void testGivenNoCommentWhenUpdateCommentThenNotFound() throws Exception {
+            // given
+            var commentId = "commentId";
             var request = new CommentRequest("channelId", "videoId", null, "new comment");
             given(commentUseCase.updateComment(any(), any(), any()))
                 .willThrow(new DomainNotFoundException("Comment Not Found."));
@@ -160,29 +180,6 @@ class CommentApiControllerTest {
                 .andExpectAll(
                     status().isNotFound(),
                     jsonPath("$.type").value("notFound")
-                );
-        }
-
-        @Test
-        @DisplayName("404 Not Found, 존재하지 않는 댓글 수정 실패")
-        void testGivenNoCommentWhenUpdateCommentThenNotFound() throws Exception {
-            // given
-            var commentId = "commentId";
-            var request = new CommentRequest("channelId", "videoId", null, "new comment");
-            given(commentUseCase.updateComment(any(), any(), any()))
-                .willThrow(new ForbiddenRequestException("Request might not be properly authorized."));
-
-            // when
-            mockMvc
-                .perform(
-                    put("/api/v1/comments/{commentId}", commentId)
-                        .header(HeaderAttribute.X_AUTH_KEY, authKey)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                )
-                .andExpectAll(
-                    status().isForbidden(),
-                    jsonPath("$.type").value("forbidden")
                 );
         }
     }
@@ -264,13 +261,13 @@ class CommentApiControllerTest {
     @DisplayName("GET /api/v1/comments/list")
     class ListComment {
         @Test
-        @DisplayName("시간 순 정렬")
-        void testGivenTimeOrderListCommentsByPublishedAt() throws Exception {
+        @DisplayName("조회하는 회원 정보가 없는 시간 순 정렬")
+        void testGivenWithoutUserListCommentsByPublishedAt() throws Exception {
             var videoId = "videoId";
             var order = "time";
             var offset = LocalDateTime.now();
             var maxSize = 10;
-            given(commentUseCase.listComments(any(), any(), any(), any())).willReturn(Collections.emptyList());
+            given(commentUseCase.listComments(any(), any(), any(), any(), any())).willReturn(Collections.emptyList());
             mockMvc
                 .perform(
                     get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&maxSize={maxSize}", videoId, order, offset, maxSize)
@@ -282,7 +279,30 @@ class CommentApiControllerTest {
                     print()
                 );
 
-            verify(commentUseCase).listComments(videoId, order, offset.toString(), maxSize);
+            verify(commentUseCase).listComments(null, videoId, order, offset.toString(), maxSize);
+        }
+
+        @Test
+        @DisplayName("조회하는 회원 정보가 있는 시간 순 정렬")
+        void testGivenUserListCommentsByPublishedAt() throws Exception {
+            var videoId = "videoId";
+            var order = "time";
+            var offset = LocalDateTime.now();
+            var maxSize = 10;
+            given(commentUseCase.listComments(any(), any(), any(), any(), any())).willReturn(Collections.emptyList());
+            mockMvc
+                .perform(
+                    get("/api/v1/comments/list?videoId={videoId}&order={order}&offset={offset}&maxSize={maxSize}", videoId, order, offset, maxSize)
+                        .header(HeaderAttribute.X_AUTH_KEY, authKey)
+                )
+                .andExpect(
+                    status().isOk()
+                )
+                .andDo(
+                    print()
+                );
+
+            verify(commentUseCase).listComments(user, videoId, order, offset.toString(), maxSize);
         }
     }
 }

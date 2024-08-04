@@ -16,7 +16,7 @@ public class CommentLikePersistenceAdapter implements CommentLikePort {
 
     @Override
     public Long getCommentLikeCount(String commentId) {
-        var viewCont = redisTemplate.opsForValue().get(getCommentLikeKey(commentId));
-        return viewCont == null ? 0 : viewCont;
+        var likeCount = redisTemplate.opsForValue().get(getCommentLikeKey(commentId));
+        return likeCount == null ? 0 : likeCount;
     }
 }

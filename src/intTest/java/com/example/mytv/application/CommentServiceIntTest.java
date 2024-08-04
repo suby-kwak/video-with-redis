@@ -69,6 +69,7 @@ public class CommentServiceIntTest {
             .hasFieldOrPropertyWithValue("likeCount", 20L);
 
         verify(userJpaRepository).findById(author.getId());
+        verify(userRedisRepository).findById(author.getId());
     }
 
     @Test

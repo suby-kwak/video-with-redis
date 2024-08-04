@@ -26,6 +26,7 @@ public class RedisNewVideoMessageListener implements MessageListener {
         try {
             NewVideoMessage newVideoMessage = objectMapper.readValue(message.getBody(), NewVideoMessage.class);
             var channelId = newVideoMessage.getChannelId();
+
             subscribeJpaRepository.findAllByChannelId(channelId).stream()
                 .map(SubscribeJpaEntity::getUser)
                 .forEach(user -> System.out.println( user.getId() + "," + channelId + " 채널에 새로운 영상이 등록되었습니다."));

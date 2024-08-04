@@ -32,7 +32,7 @@ class VideoPersistenceAdapterTest {
     private VideoPersistenceAdapter sut;
 
     private final VideoJpaRepository videoJpaRepository = mock(VideoJpaRepository.class);
-    private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class);
+    private final RedisTemplate<String, Long> redisTemplate = mock(RedisTemplate.class, Mockito.RETURNS_DEEP_STUBS);
     private final StringRedisTemplate stringRedisTemplate = mock(StringRedisTemplate.class, Mockito.RETURNS_DEEP_STUBS);
     private final ValueOperations<String, Long> valueOperations = mock(ValueOperations.class);
 
