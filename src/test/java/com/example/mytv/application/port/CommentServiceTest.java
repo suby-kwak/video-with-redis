@@ -23,6 +23,7 @@ import com.example.mytv.exception.DomainNotFoundException;
 import com.example.mytv.exception.ForbiddenRequestException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -185,6 +186,7 @@ class CommentServiceTest {
     @DisplayName("댓글 목록")
     class ListComment {
         @Test
+        @DisplayName("User 없는 댓글 목록")
         void testListComment() {
             var videoId = "videoId";
             var comments = LongStream.range(1, 6)
@@ -210,6 +212,38 @@ class CommentServiceTest {
                 .hasSize(5);
             verify(loadUserPort, times(5)).loadUser(any());
             verify(commentLikePort, times(5)).getCommentLikeCount(any());
+        }
+
+        @Test
+        @DisplayName("User 있는 댓글 목록")
+        void testGivenUserListComment() {
+            var videoId = "videoId";
+            var user = UserFixtures.stub();
+            var comments = LongStream.range(1, 6)
+                .mapToObj(l -> Comment.builder()
+                    .id(UUID.randomUUID().toString())
+                    .channelId("channelId")
+                    .videoId(videoId)
+                    .text("text " + l)
+                    .authorId("user")
+                    .publishedAt(LocalDateTime.now())
+                    .build()
+                )
+                .toList();
+            var blockedComments = Set.of(comments.get(0).getId());
+            var author = User.builder().id("user").name("author").profileImageUrl("https://example.com/profile.jpg").build();
+            given(commentPort.listComment(any(), any(), any(), any())).willReturn(comments);
+            given(commentBlockPort.getUserCommentBlocks(any())).willReturn(blockedComments);
+            given(loadUserPort.loadUser(any())).willReturn(Optional.of(author));
+            given(commentLikePort.getCommentLikeCount(any())).willReturn(20L);
+
+            var result = sut.listComments(user, videoId, "time", LocalDateTime.now().toString(), 5);
+
+            // Then
+            then(result)
+                .hasSize(4);
+            verify(loadUserPort, times(4)).loadUser(any());
+            verify(commentLikePort, times(4)).getCommentLikeCount(any());
         }
     }
 
