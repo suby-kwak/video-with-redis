@@ -9,9 +9,11 @@ spring:
   jpa:
     properties:
       hibernate:
-        ddl-auto: update
         dialect: org.hibernate.dialect.MySQLDialect
+        hbm2ddl:
+          auto: update
     open-in-view: false
+    show-sql: true
   data:
     redis:
       host: localhost
