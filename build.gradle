@@ -10,11 +10,11 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+//java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(17)
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -42,9 +42,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("org.springframework.boot:spring-boot-starter-test"){
+        exclude group: "com.vaadin.external.google", module:"android-json"
+    }
     testRuntimeOnly 'com.h2database:h2'
-    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:4.16.1'
+    testRuntimeOnly 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:7.0.12'
     intTestImplementation 'com.github.codemonstur:embedded-redis:1.4.3'
 }
 

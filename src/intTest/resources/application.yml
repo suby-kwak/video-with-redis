@@ -4,8 +4,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    hibernate:
-      ddl-auto: create-drop
+        hbm2ddl:
+          auto: create-drop
+    open-in-view: false
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:test;MODE=MYSQL
@@ -19,7 +20,7 @@ de:
   flapdoodle:
     mongodb:
       embedded:
-        version: 4.4.18
+        version: 7.0.12 #4.4.18
 logging:
   level:
     root: INFO
